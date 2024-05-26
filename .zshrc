@@ -17,6 +17,16 @@ source "$ZINIT_HOME/zinit.zsh"
 zinit ice depth=1; zinit light romkatv/powerlevel10k
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+bindkey -M vicmd 'k' history-search-backward
+bindkey -M vicmd 'j' history-search-forward
+bindkey -M viins '^y' autosuggest-accept
+
+zvm_after_init_commands+=(			  \
+  "bindkey -M viins '^p' history-search-backward" \
+  "bindkey -M viins '^n' history-search-forward"  \
+)
+
+zinit ice depth=1; zinit light jeffreytse/zsh-vi-mode
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
@@ -46,13 +56,6 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
-
-bindkey -v
-bindkey -M viins '^p' history-search-backward
-bindkey -M viins '^n' history-search-forward
-bindkey -M vicmd 'k' history-search-backward
-bindkey -M vicmd 'j' history-search-forward
-bindkey -M viins '^y' autosuggest-accept
 
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
