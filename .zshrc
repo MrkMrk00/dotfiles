@@ -1,4 +1,4 @@
-if [[ -f "~/.xinitrc" && "$XDG_SESSION_TYPE" == "tty" && "$TTY" == "/dev/tty1" ]]; then
+if [[ -f "$(realpath ~/.xinitrc)" && "$XDG_SESSION_TYPE" == "tty" && "$TTY" == "/dev/tty1" ]]; then
   startx
 fi
 
