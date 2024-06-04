@@ -154,6 +154,9 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -712,6 +715,8 @@ require('lazy').setup({
       local luasnip = require 'luasnip'
       luasnip.config.setup {}
 
+      luasnip.add_snippets(nil, require 'custom.snippets')
+
       cmp.setup {
         snippet = {
           expand = function(args)
@@ -786,10 +791,10 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'arzg/vim-colors-xcode',
+    'projekt0n/github-nvim-theme',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
-      vim.cmd.colorscheme 'xcode'
+      vim.cmd.colorscheme 'github_light'
 
       -- You can configure highlights by doing something like:
       -- vim.cmd.hi 'Comment gui=none'
