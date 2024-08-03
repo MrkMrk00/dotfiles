@@ -43,6 +43,7 @@ zinit cdreplay -q
 alias ls='ls --color'
 alias ll='ls -lah --group-directories-first'
 alias vim='nvim'
+alias k="kubectl"
 
 HISTSIZE=5000
 HISTFILE=~/.zsh_history
@@ -71,3 +72,16 @@ mkcd() {
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 
+mount_drives() {
+  if [[ "$1" == "-u" ]]; then
+    systemctl --user stop rclone@onedrive && echo "unmounted onedrive"
+    systemctl --user stop rclone@google_drive && echo "unmouned google_drive"
+
+    return 0
+  fi
+
+  systemctl --user start rclone@onedrive && echo "mounted onedrive"
+  systemctl --user start rclone@google_drive && echo "mounted google_drive"
+}
+
+PATH="$PATH:/home/marek/bin"
