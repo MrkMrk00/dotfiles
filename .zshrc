@@ -72,6 +72,10 @@ mkcd() {
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 
+export GOPATH=/home/marek/go
+export GOBIN="${GOPATH}/bin"
+
+
 mount_drives() {
   if [[ "$1" == "-u" ]]; then
     systemctl --user stop rclone@onedrive && echo "unmounted onedrive"
@@ -84,4 +88,4 @@ mount_drives() {
   systemctl --user start rclone@google_drive && echo "mounted google_drive"
 }
 
-PATH="$PATH:/home/marek/bin"
+PATH="${PATH}:/home/marek/bin:${GOBIN}"
