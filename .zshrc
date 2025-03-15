@@ -41,7 +41,7 @@ autoload -Uz compinit && compinit
 zinit cdreplay -q
 
 alias ls='ls --color'
-alias ll='ls -lah --group-directories-first'
+alias ll='ls -lah'
 alias vim='nvim'
 alias k="kubectl"
 
@@ -72,7 +72,7 @@ mkcd() {
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 
-export GOPATH=/home/marek/go
+export GOPATH="$HOME/go"
 export GOBIN="${GOPATH}/bin"
 
 
@@ -88,4 +88,6 @@ mount_drives() {
   systemctl --user start rclone@google_drive && echo "mounted google_drive"
 }
 
-PATH="${PATH}:/home/marek/bin:${GOBIN}"
+COMPOSER_BIN="${HOME}/.config/composer/vendor/bin"
+
+PATH="${PATH}:${HOME}/bin:${GOBIN}:${COMPOSER_BIN}"

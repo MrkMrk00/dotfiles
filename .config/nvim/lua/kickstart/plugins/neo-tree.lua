@@ -3,6 +3,7 @@
 
 return {
   'nvim-neo-tree/neo-tree.nvim',
+  event = 'VeryLazy',
   version = '*',
   dependencies = {
     'nvim-lua/plenary.nvim',
@@ -15,9 +16,17 @@ return {
   },
   opts = {
     filesystem = {
+      filtered_items = {
+        visible = true,
+      },
+
       window = {
         mappings = {
           ['\\'] = 'close_window',
+          ['d'] = 'add_directory',
+          ['D'] = 'delete',
+          ['R'] = 'rename',
+          ['%'] = 'add',
         },
       },
     },
