@@ -257,8 +257,10 @@ require('lazy').setup({
     end,
   },
 
+  { 'roobert/tailwindcss-colorizer-cmp.nvim' },
+
   -- HTML tags autorename closing
-  'windwp/nvim-ts-autotag',
+  { 'windwp/nvim-ts-autotag' },
 
   {
     'yetone/avante.nvim',
@@ -663,7 +665,12 @@ require('lazy').setup({
 
       luasnip.add_snippets(nil, require 'custom.snippets')
 
+      cmp.config.formatting = {}
+
       cmp.setup {
+        formatting = {
+          format = require('tailwindcss-colorizer-cmp').formatter,
+        },
         snippet = {
           expand = function(args)
             luasnip.lsp_expand(args.body)
