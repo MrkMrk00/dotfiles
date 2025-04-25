@@ -2,13 +2,6 @@ if [[ -f "~/.xinitrc" && "$XDG_SESSION_TYPE" == "tty" && "$TTY" == "/dev/tty1" ]
   startx
 fi
 
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
 
 if [[ ! -d "$ZINIT_HOME" ]]; then
@@ -17,9 +10,6 @@ if [[ ! -d "$ZINIT_HOME" ]]; then
 fi
 
 source "$ZINIT_HOME/zinit.zsh"
-
-zinit ice depth=1; zinit light romkatv/powerlevel10k
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 bindkey -M vicmd 'k' history-search-backward
 bindkey -M vicmd 'j' history-search-forward
@@ -36,6 +26,8 @@ zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
 
+PS1="%1~ > "
+
 autoload -Uz compinit && compinit
 
 zinit cdreplay -q
@@ -44,6 +36,7 @@ alias ls='ls --color'
 alias ll='ls -lah'
 alias vim='nvim'
 alias k="kubectl"
+alias g="git"
 
 HISTSIZE=5000
 HISTFILE=~/.zsh_history
@@ -75,19 +68,25 @@ export EDITOR="$VISUAL"
 export GOPATH="$HOME/go"
 export GOBIN="${GOPATH}/bin"
 
-
-mount_drives() {
-  if [[ "$1" == "-u" ]]; then
-    systemctl --user stop rclone@onedrive && echo "unmounted onedrive"
-    systemctl --user stop rclone@google_drive && echo "unmouned google_drive"
-
-    return 0
-  fi
-
-  systemctl --user start rclone@onedrive && echo "mounted onedrive"
-  systemctl --user start rclone@google_drive && echo "mounted google_drive"
-}
+export COREPACK_ENABLE_AUTO_PIN=0
 
 COMPOSER_BIN="${HOME}/.config/composer/vendor/bin"
 
 PATH="${PATH}:${HOME}/bin:${GOBIN}:${COMPOSER_BIN}"
+
+# pnpm
+export PNPM_HOME="/Users/marek/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+#
+
+update() {
+    brew update && brew upgrade &
+
+    cd /etc/nix-darwin/
+    nix flake update
+    darwin-rebuild switch
+}

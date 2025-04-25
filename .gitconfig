@@ -4,4 +4,6 @@
 [init]
 	defaultBranch = master
 [push]
-	autoSetupRemote = true
+        autoSetupRemote = true
+[mergetool "nvimdiff"]
+        layout = "LOCAL,BASE,REMOTE / MERGED"

@@ -216,6 +216,12 @@ require('lazy').setup({
     init = function()
       vim.cmd.colorscheme 'rose-pine-dawn'
       vim.o.background = 'light'
+
+      vim.opt.guicursor = 'n-v-c:block-Cursor,i-ci:ver25-InCursor,r-cr:hor20-Cursor'
+      vim.cmd [[
+        highlight Cursor guifg=black guibg=orange
+        highlight InCursor guifg=white guibg=blue
+      ]]
     end,
   },
 
@@ -545,7 +551,21 @@ require('lazy').setup({
       local servers = {
         stylua = {},
         clangd = {},
-        pyright = {},
+        ruff = {},
+        pyright = {
+          settings = {
+            pyright = {
+              -- Using Ruff's import organizer
+              disableOrganizeImports = true,
+            },
+            python = {
+              analysis = {
+                -- Ignore all files for analysis to exclusively use Ruff for linting
+                ignore = { '*' },
+              },
+            },
+          },
+        },
         rust_analyzer = {},
         phpactor = {},
 
@@ -825,7 +845,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
-  require 'kickstart.plugins.neo-tree',
+  -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
