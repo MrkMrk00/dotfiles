@@ -208,6 +208,23 @@ if not vim.loop.fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
+local js_filetypes = {
+  'javascript',
+  'javascriptreact',
+  'typescript',
+  'typescriptreact',
+  'vue',
+}
+
+function table.contains(table, element)
+  for _, value in ipairs(table) do
+    if value == element then
+      return true
+    end
+  end
+  return false
+end
+
 require('lazy').setup({
   {
     'rose-pine/neovim',
@@ -267,6 +284,30 @@ require('lazy').setup({
 
   -- HTML tags autorename closing
   { 'windwp/nvim-ts-autotag' },
+
+  {
+    'fang2hou/go-impl.nvim',
+    ft = 'go',
+    dependencies = {
+      'MunifTanjim/nui.nvim',
+      'nvim-lua/plenary.nvim',
+
+      -- Choose one of the following fuzzy finder
+      'folke/snacks.nvim',
+      'ibhagwan/fzf-lua',
+    },
+    opts = {},
+    keys = {
+      {
+        '<leader>gi',
+        function()
+          require('go-impl').open()
+        end,
+        mode = { 'n' },
+        desc = 'Go Impl',
+      },
+    },
+  },
 
   {
     'yetone/avante.nvim',
@@ -411,32 +452,27 @@ require('lazy').setup({
   },
 
   {
-    'pmizio/typescript-tools.nvim',
+    'MrkMrk00/typescript-tools.nvim',
     dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
-    ft = {
-      'javascript',
-      'javascriptreact',
-      'typescript',
-      'typescriptreact',
-      'vue',
-    },
+    ft = js_filetypes,
     opts = {},
     config = function()
+      local mason_path = vim.fn.stdpath 'data' .. '/mason/packages/'
+
       require('typescript-tools').setup {
-        filetypes = {
-          'javascript',
-          'javascriptreact',
-          'typescript',
-          'typescriptreact',
-          'vue',
-        },
+        filetypes = js_filetypes,
         settings = {
+          code_lens = 'implementations_only',
+          expose_as_code_action = 'all',
           tsserver_plugins = {
-            '@vue/typescript-plugin',
+            {
+              name = '@vue/typescript-plugin',
+              path = mason_path .. 'vue-language-server/node_modules/@vue/language-server/bin/vue-language-server.js',
+            },
           },
           jsx_close_tag = {
             enable = true,
-            filetypes = { 'javascriptreact', 'typescriptreact' },
+            filetypes = js_filetypes,
           },
         },
       }
@@ -570,9 +606,14 @@ require('lazy').setup({
         phpactor = {},
 
         prettierd = {},
-        eslint = {},
+        eslint = {
+          settings = {
+            useFlatConfig = false,
+          },
+        },
         volar = { 'vue' },
         cssls = {},
+        unocss = {},
         tailwindcss = {},
 
         lua_ls = {
@@ -613,7 +654,20 @@ require('lazy').setup({
       {
         '<leader>f',
         function()
-          require('conform').format { async = true, lsp_fallback = true }
+          require('conform').format({ async = true, lsp_fallback = true }, function(_, _)
+            local bufnr = vim.api.nvim_get_current_buf()
+            local clients = vim.lsp.get_clients { bufnr = bufnr }
+
+            for _, client in ipairs(clients) do
+              if client.name == 'typescript-tools' then
+                vim.cmd [[
+                  TSToolsFixAll
+                  TSToolsOrganizeImports
+                ]]
+                break
+              end
+            end
+          end)
         end,
         mode = '',
         desc = '[F]ormat buffer',
@@ -622,16 +676,10 @@ require('lazy').setup({
     config = function()
       local formatters = {
         {
-          ft = {
-            'javascript',
-            'javascriptreact',
-            'typescript',
-            'typescriptreact',
-            'vue',
-          },
+          ft = js_filetypes,
           formatters = {
             'prettierd',
-            'prettier',
+            'eslint',
           },
         },
         {

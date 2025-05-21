@@ -83,10 +83,4 @@ esac
 # pnpm end
 #
 
-update() {
-    brew update && brew upgrade &
-
-    cd /etc/nix-darwin/
-    nix flake update
-    darwin-rebuild switch
-}
+eval "$(fnm env --use-on-cd --corepack-enabled)"
