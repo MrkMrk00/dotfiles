@@ -478,28 +478,12 @@ require('lazy').setup({
       }
     end,
   },
-
-  {
-    'nvim-java/nvim-java',
-    dependencies = {
-      'neovim/nvim-lspconfig',
-    },
-    config = function()
-      require('java').setup {
-        jdk = {
-          auto_install = false,
-        },
-      }
-      require('lspconfig').jdtls.setup {}
-    end,
-  },
-
   {
     'neovim/nvim-lspconfig',
     dependencies = {
       { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
-      'williamboman/mason-lspconfig.nvim',
-      'WhoIsSethDaniel/mason-tool-installer.nvim',
+      { 'williamboman/mason-lspconfig.nvim', branch = 'v1.x' },
+      { 'WhoIsSethDaniel/mason-tool-installer.nvim', commit = '09caa3380a0e8532043bc417c04d1d6d31b6683b' },
 
       { 'j-hui/fidget.nvim', opts = {} },
 
@@ -606,11 +590,7 @@ require('lazy').setup({
         phpactor = {},
 
         prettierd = {},
-        eslint = {
-          settings = {
-            useFlatConfig = false,
-          },
-        },
+        eslint = {},
         volar = { 'vue' },
         cssls = {},
         unocss = {},
@@ -625,7 +605,19 @@ require('lazy').setup({
             },
           },
         },
+        gopls = {},
       }
+
+      local function has_eslintrc(path)
+        local found_files = vim.fs.find({ '.eslintrc', '.eslintrc.json', '.eslintrc.js', '.eslintrc.cjs', '.eslintrc.mjs' }, {
+          path = path,
+          upward = true,
+          limit = 2,
+          type = 'file',
+        })
+
+        return #found_files > 0
+      end
 
       require('mason').setup()
       require('mason-tool-installer').setup {
@@ -633,6 +625,8 @@ require('lazy').setup({
       }
 
       require('mason-lspconfig').setup {
+        automatic_installation = false,
+        ensure_installed = {},
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
@@ -640,6 +634,21 @@ require('lazy').setup({
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for tsserver)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+
+            if server_name == 'eslint' and has_eslintrc(vim.fn.getcwd()) then
+              server = vim.tbl_deep_extend('keep', server, {
+                cmd_env = {
+                  ESLINT_USE_FLAT_CONFIG = '0',
+                },
+                settings = {
+                  useFlatConfig = false,
+                  experimental = {
+                    useFlatConfig = false,
+                  },
+                },
+              })
+            end
+
             require('lspconfig')[server_name].setup(server)
           end,
         },
