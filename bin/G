@@ -1,0 +1,36 @@
+#!/usr/bin/env zsh
+
+PROG_NAME=$(basename "$0");
+
+fuzzy_checkout() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: $PROG_NAME cof <fuzzy-branch-name>"
+        exit 1
+    fi
+
+    local BRANCH_NAME=$(git branch --list "*$1*" --format='%(refname:short)' | head -n1)
+    if [[ -z "$BRANCH_NAME" ]]; then
+        echo "No branch found matching: \"$1\""
+        exit 1
+    fi
+
+    echo "Checking out branch: $BRANCH_NAME"
+
+    git checkout "$BRANCH_NAME"
+}
+
+command="$1"
+shift
+
+case "$command" in
+    'cof')
+        fuzzy_checkout $@
+        exit $?
+    ;;
+
+    *)
+        git "$command" $@
+        exit $?
+    ;;
+esac
+

@@ -38,6 +38,10 @@ alias vim='nvim'
 alias k="kubectl"
 alias g="git"
 
+alias gs='git status'
+alias gf='git fetch && git pull'
+alias gam='git commit --amend --no-edit'
+
 HISTSIZE=5000
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
@@ -84,3 +88,4 @@ esac
 #
 
 eval "$(fnm env --use-on-cd --corepack-enabled)"
+source "$HOME/.cargo/env"

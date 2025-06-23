@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = true
+vim.g.have_nerd_font = false
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -230,6 +230,12 @@ require('lazy').setup({
     'rose-pine/neovim',
     name = 'rose-pine',
     event = 'VeryLazy',
+    opts = {
+      styles = {
+        italic = false,
+        bold = false,
+      },
+    },
     init = function()
       vim.cmd.colorscheme 'rose-pine-dawn'
       vim.o.background = 'light'
@@ -243,18 +249,6 @@ require('lazy').setup({
   },
 
   { 'numToStr/Comment.nvim', opts = {} },
-  {
-    'lewis6991/gitsigns.nvim',
-    opts = {
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
-    },
-  },
 
   {
     'folke/which-key.nvim',
@@ -283,67 +277,12 @@ require('lazy').setup({
   { 'roobert/tailwindcss-colorizer-cmp.nvim' },
 
   -- HTML tags autorename closing
-  { 'windwp/nvim-ts-autotag' },
-
   {
-    'fang2hou/go-impl.nvim',
-    ft = 'go',
-    dependencies = {
-      'MunifTanjim/nui.nvim',
-      'nvim-lua/plenary.nvim',
-
-      -- Choose one of the following fuzzy finder
-      'folke/snacks.nvim',
-      'ibhagwan/fzf-lua',
-    },
-    opts = {},
-    keys = {
-      {
-        '<leader>gi',
-        function()
-          require('go-impl').open()
-        end,
-        mode = { 'n' },
-        desc = 'Go Impl',
-      },
-    },
-  },
-
-  {
-    'yetone/avante.nvim',
-    event = 'VeryLazy',
-    version = false,
+    'windwp/nvim-ts-autotag',
     opts = {
-      provider = 'copilot',
-    },
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter',
-      'stevearc/dressing.nvim',
-      'nvim-lua/plenary.nvim',
-      'MunifTanjim/nui.nvim',
-      {
-        'MeanderingProgrammer/render-markdown.nvim',
-        opts = {
-          file_types = { 'markdown', 'Avante' },
-        },
-        ft = { 'markdown', 'Avante' },
-      },
-    },
-  },
-
-  {
-    'zbirenbaum/copilot.lua',
-    cmd = 'Copilot',
-    event = 'InsertEnter',
-    opts = {
-      suggestion = {
-        auto_trigger = true,
-        keymap = {
-          accept = '<C-y>',
-          next = '<C-n>',
-          prev = '<C-p>',
-        },
-      },
+      enable_close = true, -- Auto close tags
+      enable_rename = true, -- Auto rename pairs of tags
+      enable_close_on_slash = false, -- Auto close on trailing </
     },
   },
 
@@ -455,14 +394,12 @@ require('lazy').setup({
     'MrkMrk00/typescript-tools.nvim',
     dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
     ft = js_filetypes,
-    opts = {},
     config = function()
       local mason_path = vim.fn.stdpath 'data' .. '/mason/packages/'
 
       require('typescript-tools').setup {
         filetypes = js_filetypes,
         settings = {
-          code_lens = 'implementations_only',
           expose_as_code_action = 'all',
           tsserver_plugins = {
             {
@@ -471,8 +408,7 @@ require('lazy').setup({
             },
           },
           jsx_close_tag = {
-            enable = true,
-            filetypes = js_filetypes,
+            enable = false,
           },
         },
       }
@@ -905,11 +841,6 @@ require('lazy').setup({
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
-  -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
-  --    This is the easiest way to modularize your config.
-  --
-  --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   { import = 'custom.plugins' },
 }, {
   ui = {
