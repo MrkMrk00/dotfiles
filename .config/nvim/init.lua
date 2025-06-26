@@ -250,9 +250,11 @@ require('lazy').setup({
   {
     'windwp/nvim-ts-autotag',
     opts = {
-      enable_close = true, -- Auto close tags
-      enable_rename = true, -- Auto rename pairs of tags
-      enable_close_on_slash = false, -- Auto close on trailing </
+      opts = {
+        enable_close = true, -- Auto close tags
+        enable_rename = true, -- Auto rename pairs of tags
+        enable_close_on_slash = false, -- Auto close on trailing </
+      },
     },
   },
 
@@ -388,6 +390,8 @@ require('lazy').setup({
     'neovim/nvim-lspconfig',
     dependencies = {
       { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
+
+      -- v2 breaks autolaunching of LSP servers :/
       { 'williamboman/mason-lspconfig.nvim', branch = 'v1.x' },
       { 'WhoIsSethDaniel/mason-tool-installer.nvim', commit = '09caa3380a0e8532043bc417c04d1d6d31b6683b' },
 

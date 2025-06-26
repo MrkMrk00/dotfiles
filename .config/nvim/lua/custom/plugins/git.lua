@@ -74,7 +74,7 @@ return {
       {
         '<leader>gg',
         function()
-          require('neogit').open { kind = 'floating' }
+          require('neogit').open { kind = 'tab' }
         end,
         mode = 'n',
         desc = 'git [g]ui',
