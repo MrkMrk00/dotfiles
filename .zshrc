@@ -20,11 +20,18 @@ zvm_after_init_commands+=(			  \
   "bindkey -M viins '^n' history-search-forward"  \
 )
 
+zinit_async() {
+    zinit ice lucid wait'0';
+    zinit light $@
+}
+
 zinit ice depth=1; zinit light jeffreytse/zsh-vi-mode
-zinit light zsh-users/zsh-syntax-highlighting
-zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-autosuggestions
-zinit light Aloxaf/fzf-tab
+
+zinit_async Aloxaf/fzf-tab
+zinit_async zsh-users/zsh-syntax-highlighting
+zinit_async zsh-users/zsh-completions
+zinit_async zsh-users/zsh-autosuggestions
+zinit_async joshskidmore/zsh-fzf-history-search
 
 PS1="%1~ > "
 
@@ -41,6 +48,10 @@ alias g="git"
 alias gs='git status'
 alias gf='git fetch && git pull'
 alias gam='git commit --amend --no-edit'
+
+mkcd() {
+  mkdir -p "$1" && cd "$1"
+}
 
 HISTSIZE=5000
 HISTFILE=~/.zsh_history
@@ -62,19 +73,13 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
 
-mkcd() {
-  mkdir -p "$1" && cd "$1"
-}
-
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 
 export GOPATH="$HOME/go"
 export GOBIN="${GOPATH}/bin"
-
 export COREPACK_ENABLE_AUTO_PIN=0
-
-COMPOSER_BIN="${HOME}/.config/composer/vendor/bin"
+export COMPOSER_BIN="${HOME}/.config/composer/vendor/bin"
 
 PATH="${PATH}:${HOME}/bin:${GOBIN}:${COMPOSER_BIN}"
 

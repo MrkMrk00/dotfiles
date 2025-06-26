@@ -643,6 +643,8 @@ require('lazy').setup({
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'hrsh7th/cmp-buffer',
+      'rafamadriz/friendly-snippets',
     },
     config = function()
       -- See `:help cmp`
@@ -651,6 +653,7 @@ require('lazy').setup({
       luasnip.config.setup {}
 
       luasnip.add_snippets(nil, require 'custom.snippets')
+      require("luasnip.loaders.from_vscode").lazy_load()
 
       cmp.config.formatting = {}
 
@@ -721,6 +724,7 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+          { name = 'buffer' },
         },
       }
     end,
