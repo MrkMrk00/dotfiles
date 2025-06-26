@@ -153,6 +153,8 @@ vim.opt.scrolloff = 10
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 
+require 'custom.netrw'
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
