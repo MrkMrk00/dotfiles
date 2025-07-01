@@ -33,15 +33,19 @@ end
 
 local N = {
   Lexplore = function(opts)
+    opts = opts or {}
+
     run_with_opts(function()
       vim.cmd('Lexplore ' .. (opts._path or ''))
-    end, opts or {})
+    end, opts)
   end,
 
   Explore = function(opts)
+    opts = opts or {}
+
     run_with_opts(function()
       vim.cmd('Explore ' .. (opts._path or ''))
-    end, opts or {})
+    end, opts)
   end,
 }
 
