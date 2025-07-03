@@ -51,27 +51,24 @@ local N = {
 
 vim.keymap.set('n', '<leader>ee', function()
   N.Lexplore {
-    liststyle = 3,
+    liststyle = 0,
     banner = 0,
-    winsize = 25,
+    winsize = 20,
   }
 end, { desc = 'open [e]xplore side panel' })
 
-vim.keymap.set('n', '<leader>eE', function()
-  N.Explore()
-end, { desc = '[e]xplore' })
-
 vim.keymap.set('n', '<leader>ec', function()
   N.Lexplore {
-    liststyle = 3,
+    liststyle = 0,
     banner = 0,
-    winsize = 25,
+    winsize = 20,
     _path = current_dirname(),
   }
-end, { desc = "[e]xplore [c]urrent buffer's dirname" })
+end, { desc = '[e]xplore in [c]urrent browsing dir' })
 
 vim.keymap.set('n', '<leader>eC', function()
   N.Explore {
     _path = current_dirname(),
   }
-end, { desc = "open [e]xplore [C]urrent in buffer's dirname" })
+end, { desc = 'open netrw ([e]xplore) in [c]urrent browsing dir' })
+
