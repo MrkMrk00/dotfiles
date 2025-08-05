@@ -43,7 +43,6 @@ alias ls='ls --color'
 alias ll='ls -lah'
 alias vim='nvim'
 alias k="kubectl"
-alias g="git"
 
 alias gs='git status'
 alias gf='git fetch && git pull'
@@ -80,8 +79,9 @@ export GOPATH="$HOME/go"
 export GOBIN="${GOPATH}/bin"
 export COREPACK_ENABLE_AUTO_PIN=0
 export COMPOSER_BIN="${HOME}/.config/composer/vendor/bin"
+export GPG_TTY=$(tty)
 
-PATH="${PATH}:${HOME}/bin:${GOBIN}:${COMPOSER_BIN}"
+PATH="${PATH}:${HOME}/bin:${GOBIN}:${COMPOSER_BIN}:${HOME}/.ghcup/bin"
 
 # pnpm
 export PNPM_HOME="/Users/marek/Library/pnpm"

@@ -1,9 +1,23 @@
 [user]
-	email = mhau@outlook.cz
-	name = MrkMrk00
+    email = mhau@outlook.cz
+    name = MrkMrk00
+    signingkey = 95510463038FAC69
 [init]
-	defaultBranch = master
+    defaultBranch = master
 [push]
-        autoSetupRemote = true
+    autoSetupRemote = true
 [mergetool "nvimdiff"]
-        layout = "LOCAL,BASE,REMOTE / MERGED"
+    layout = "LOCAL,BASE,REMOTE / MERGED"
+[commit]
+    gpgsign = true
+
+[diff]
+    tool = kitty
+    guitool = kitty.gui
+[difftool]
+    prompt = false
+    trustExitCode = true
+[difftool "kitty"]
+    cmd = kitten diff $LOCAL $REMOTE
+[difftool "kitty.gui"]
+    cmd = kitten diff $LOCAL $REMOTE
