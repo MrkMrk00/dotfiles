@@ -1,3 +1,12 @@
+-- Some magic with loading configuration from different path
+local init_dir = string.match(debug.getinfo(1, 'S').source:sub(2), '(.*/)')
+if not init_dir then
+    error 'Could not determine init.lua directory'
+end
+vim.opt.rtp:prepend(init_dir)
+local lua_path = init_dir .. 'lua/?.lua;' .. init_dir .. 'lua/?/init.lua'
+package.path = package.path .. ';' .. lua_path
+
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
@@ -46,13 +55,22 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     end,
 })
 
-vim.pack.add {
+require('lib_plug').setup {
     { src = 'git@github.com:nvim-lua/plenary.nvim.git' },
     { src = 'git@github.com:rose-pine/neovim.git' },
     { src = 'git@github.com:stevearc/oil.nvim' },
+    { src = 'git@github.com:Allaman/emoji.nvim.git' },
 
     -- Treesitter
-    { src = 'git@github.com:nvim-treesitter/nvim-treesitter.git', branch = 'master' },
+    {
+        src = 'git@github.com:nvim-treesitter/nvim-treesitter.git',
+        version = 'main',
+        on_update = function()
+            local do_update = require('nvim-treesitter.install').update { with_sync = true }
+
+            do_update()
+        end,
+    },
     { src = 'git@github.com:windwp/nvim-ts-autotag.git' },
 
     -- Lsp
@@ -61,12 +79,6 @@ vim.pack.add {
     { src = 'git@github.com:mason-org/mason-lspconfig.nvim.git' },
     { src = 'git@github.com:folke/lazydev.nvim.git' },
     { src = 'git@github.com:stevearc/conform.nvim.git' },
-
-    -- Debug: TODO
-    -- { src = 'git@github.com:mfussenegger/nvim-dap.git' },
-    -- { src = 'git@github.com:jay-babu/mason-nvim-dap.nvim' },
-    -- { src = 'git@github.com:rcarriga/nvim-dap-ui' },
-    -- { src = 'nvim-neotest/nvim-nio' },
 
     { src = 'git@github.com:ibhagwan/fzf-lua.git' },
 
@@ -77,17 +89,9 @@ vim.pack.add {
     -- Compile mode
     { src = 'git@github.com:m00qek/baleia.nvim.git' },
     { src = 'git@github.com:ej-shafran/compile-mode.nvim.git' },
+
+    -- TODO: debug, snippets
 }
-
-vim.api.nvim_create_autocmd({ 'PackChanged' }, {
-    callback = function(ev)
-        if ev.data.spec.name == 'nvim-treesitter' then
-            local do_update = require('nvim-treesitter.install').update { with_sync = true }
-
-            do_update()
-        end
-    end,
-})
 
 -- Treesitter ====================
 require('nvim-treesitter.install').prefer_git = true
@@ -114,13 +118,13 @@ require('nvim-ts-autotag').setup {
 
 -- LSP ===========================
 require('mason').setup {
-    install_root_dir = vim.fn.stdpath('data') .. 'mason-nvim-next',
+    install_root_dir = vim.fn.stdpath 'data' .. 'mason-nvim-next',
 }
 require('mason-lspconfig').setup {
     ensure_installed = { 'lua_ls', 'ts_ls', 'clangd' },
 }
 require('lazydev').setup {}
-local conform = require('conform')
+local conform = require 'conform'
 conform.setup {
     formatters_by_ft = {
         lua = { 'stylua' },
@@ -136,8 +140,32 @@ conform.setup {
         },
     },
 }
+
+local vue_language_server_path = vim.fn.expand '$MASON/packages'
+    .. '/vue-language-server'
+    .. '/node_modules/@vue/language-server'
+
+local vue_plugin = {
+    name = '@vue/typescript-plugin',
+    location = vue_language_server_path,
+    languages = { 'vue' },
+    configNamespace = 'typescript',
+}
+
+vim.lsp.config(
+    'ts_ls',
+    vim.tbl_extend('force', require 'lspconfig.configs.ts_ls', {
+        init_options = {
+            plugins = {
+                vue_plugin,
+            },
+        },
+        filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+    })
+)
+
 vim.keymap.set('n', '<leader>f', function()
-    conform.format {}
+    conform.format { async = true }
 end)
 
 local function autocomplete()
@@ -169,7 +197,7 @@ vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename)
 -- END LSP =======================
 
 -- FZF lua =======================
-local fzf = require('fzf-lua')
+local fzf = require 'fzf-lua'
 fzf.setup {
     { 'ivy', 'borderless-full' },
     files = {
@@ -181,6 +209,8 @@ fzf.register_ui_select()
 vim.keymap.set('n', '<leader>sf', fzf.files)
 vim.keymap.set('n', '<leader>sg', fzf.live_grep_native)
 vim.keymap.set('n', '<leader>/', fzf.lgrep_curbuf)
+vim.keymap.set('n', '<leader>sr', fzf.resume)
+vim.keymap.set('n', '<leader> ', fzf.buffers)
 
 vim.api.nvim_create_autocmd('LspAttach', {
     group = global_augroup,
@@ -205,7 +235,7 @@ vim.keymap.set('n', '<leader>gg', function()
     require('neogit').open()
 end)
 
-local gitsigns = require('gitsigns')
+local gitsigns = require 'gitsigns'
 gitsigns.setup {
     on_attach = function(bufnr)
         local function map(mode, l, r, opts)
@@ -218,10 +248,10 @@ gitsigns.setup {
         map('n', '<leader>gr', gitsigns.reset_hunk)
 
         map('v', '<leader>gs', function()
-            gitsigns.stage_hunk { vim.fn.line('.'), vim.fn.line('v') }
+            gitsigns.stage_hunk { vim.fn.line '.', vim.fn.line 'v' }
         end)
         map('v', '<leader>gr', function()
-            gitsigns.reset_hunk { vim.fn.line('.'), vim.fn.line('v') }
+            gitsigns.reset_hunk { vim.fn.line '.', vim.fn.line 'v' }
         end)
 
         map('n', '<leader>gb', function()
@@ -237,7 +267,6 @@ gitsigns.setup {
 }
 
 -- END GIT =======================
-
 require('oil').setup {
     view_options = {
         show_hidden = true,
@@ -288,9 +317,13 @@ require('rose-pine').setup {
 }
 
 vim.opt.background = 'light'
-vim.cmd.colorscheme('rose-pine')
+vim.cmd.colorscheme 'rose-pine'
 vim.opt.guicursor = 'n-v-c:block-Cursor,i-ci:ver25-InCursor,r-cr:hor20-Cursor'
-vim.cmd([[
+vim.cmd [[
     highlight Cursor guifg=black guibg=orange
     highlight InCursor guifg=white guibg=blue
-]])
+]]
+
+require('emoji').setup {
+    plugin_path = vim.fn.stdpath 'data' .. '/site/pack/core/opt',
+}
