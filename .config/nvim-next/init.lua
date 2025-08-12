@@ -37,7 +37,6 @@ vim.opt.scrolloff = 10
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.hlsearch = true
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 vim.opt.laststatus = 2
 vim.opt.inccommand = 'split'
@@ -49,6 +48,7 @@ vim.opt.undofile = true
 -- TODO: remove
 vim.opt.clipboard = 'unnamedplus'
 
+vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic error messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic quickfix list' })
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
@@ -104,6 +104,7 @@ local plugins = {
         src = 'git@github.com:nvim-treesitter/nvim-treesitter.git',
         version = 'master',
     },
+    { src = 'git@github.com:nvim-treesitter/nvim-treesitter-textobjects.git' },
     { src = 'git@github.com:windwp/nvim-ts-autotag.git' },
 
     -- Lsp
@@ -140,8 +141,6 @@ vim.api.nvim_create_autocmd('PackChanged', {
             local do_update = require('nvim-treesitter.install').update { with_sync = true }
 
             do_update()
-        elseif ev.data.spec.name == 'vim-kitty-navigator' then
-            vim.notify(vim.fn.system('cp ' .. ev.data.path .. '/*.py ~/.config/kitty/'))
         end
     end,
 })
@@ -156,7 +155,34 @@ require('nvim-treesitter.configs').setup {
     indent = { enable = true },
     highlight = { enable = true },
     additional_vim_regex_highlighting = false,
+    textobjects = {
+        select = {
+            enable = true,
+            keymaps = {
+                ['if'] = '@function.inner',
+                ['af'] = '@function.outer',
+                ['ib'] = '@block.inner',
+                ['ab'] = '@block.outer',
+                ['as'] = '@statement.outer',
+            },
+            include_surrounding_whitespace = false,
+        },
+        move = {
+            enable = true,
+            set_jumps = true,
+            goto_next_start = {
+                [']f'] = '@function.outer',
+            },
+            goto_prev_start = {
+                ['[f'] = '@function.outer',
+            },
+        },
+    },
 }
+
+local ts_repeat_move = require 'nvim-treesitter.textobjects.repeatable_move'
+vim.keymap.set({ 'n', 'x', 'o' }, ';', ts_repeat_move.repeat_last_move_next)
+vim.keymap.set({ 'n', 'x', 'o' }, ',', ts_repeat_move.repeat_last_move_previous)
 
 vim.opt.foldmethod = 'expr'
 vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
@@ -354,12 +380,17 @@ gitsigns.setup {
         map('n', '<leader>gs', gitsigns.stage_hunk)
         map('n', '<leader>gr', gitsigns.reset_hunk)
 
-        map('n', '<leader>gn', function()
+        -- make the next/prev hunk commands repeatable with ";" and ","
+        local next_hunk_repeat, prev_hunk_repeat = ts_repeat_move.make_repeatable_move_pair(function()
+            ---@diagnostic disable-next-line: param-type-mismatch
             gitsigns.nav_hunk 'next'
-        end)
-        map('n', '<leader>gp', function()
+        end, function()
+            ---@diagnostic disable-next-line: param-type-mismatch
             gitsigns.nav_hunk 'prev'
         end)
+
+        map({ 'n', 'x', 'o' }, ']h', next_hunk_repeat)
+        map({ 'n', 'x', 'o' }, '[h', prev_hunk_repeat)
 
         map('v', '<leader>gs', function()
             gitsigns.stage_hunk { vim.fn.line '.', vim.fn.line 'v' }
@@ -373,6 +404,7 @@ gitsigns.setup {
         end)
         map('n', '<leader>gB', gitsigns.blame)
         map('n', '<leader>gq', function()
+            ---@diagnostic disable-next-line: param-type-mismatch
             gitsigns.setqflist(0, { open = false, use_location_list = true }, function()
                 fzf.loclist()
             end)
@@ -381,6 +413,12 @@ gitsigns.setup {
 }
 
 -- END GIT =======================
+--  make builtin f, F, t, T repeatable with ; and ,
+vim.keymap.set({ 'n', 'x', 'o' }, 'f', ts_repeat_move.builtin_f_expr, { expr = true })
+vim.keymap.set({ 'n', 'x', 'o' }, 'F', ts_repeat_move.builtin_F_expr, { expr = true })
+vim.keymap.set({ 'n', 'x', 'o' }, 't', ts_repeat_move.builtin_t_expr, { expr = true })
+vim.keymap.set({ 'n', 'x', 'o' }, 'T', ts_repeat_move.builtin_T_expr, { expr = true })
+
 local oil = require 'oil'
 oil.setup {
     view_options = {
@@ -399,9 +437,10 @@ todo.setup {
     signs = false,
 }
 
+local next_todo, prev_todo = ts_repeat_move.make_repeatable_move_pair(todo.jump_next, todo.jump_prev)
 vim.keymap.set('n', '<leader>sc', '<CMD>TodoFzfLua<CR>')
-vim.keymap.set('n', '[t', todo.jump_prev, { desc = 'Jump to previous TODO' })
-vim.keymap.set('n', ']t', todo.jump_next, { desc = 'Jump to next TODO' })
+vim.keymap.set('n', ']t', next_todo, { desc = 'Jump to next TODO' })
+vim.keymap.set('n', '[t', prev_todo, { desc = 'Jump to previous TODO' })
 
 -- Compile mode settings
 vim.g.compile_mode = {
