@@ -202,7 +202,7 @@ require('mason').setup {
     install_root_dir = vim.fn.stdpath 'data' .. 'mason-nvim-next',
 }
 require('mason-lspconfig').setup {
-    ensure_installed = { 'lua_ls', 'ts_ls', 'clangd' },
+    ensure_installed = { 'lua_ls', 'vtsls', 'clangd' },
 }
 require('lazydev').setup {}
 local conform = require 'conform'
@@ -309,10 +309,16 @@ local function setup_vuejs()
         configNamespace = 'typescript',
     }
 
-    vim.lsp.config('ts_ls', {
-        init_options = {
-            plugins = {
-                vue_plugin,
+    vim.lsp.config('vtsls', {
+        settings = {
+            vtsls = {
+                -- This should be enabled, but the plugins then have to be defined per project :/.
+                -- autoUseWorkspaceTsdk = true,
+                tsserver = {
+                    globalPlugins = {
+                        vue_plugin,
+                    },
+                },
             },
         },
         filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
