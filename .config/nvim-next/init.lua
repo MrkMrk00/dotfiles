@@ -91,13 +91,11 @@ local function pack_cleanup(specs)
     end
 end
 
-local NVIM_PACK_PATH = vim.fn.stdpath 'data' .. '/site/pack/core/opt/'
-
+-- local NVIM_PACK_PATH = vim.fn.stdpath 'data' .. '/site/pack/core/opt/'
 local plugins = {
     { src = 'git@github.com:nvim-lua/plenary.nvim.git' },
     { src = 'git@github.com:rose-pine/neovim.git' },
     { src = 'git@github.com:stevearc/oil.nvim' },
-    { src = 'git@github.com:Allaman/emoji.nvim.git' },
     { src = 'git@github.com:folke/todo-comments.nvim.git' },
     { src = 'git@github.com:folke/snacks.nvim.git' }, -- for snacks.image
 
@@ -306,9 +304,6 @@ fzf.setup {
     },
 }
 fzf.register_ui_select()
-require('todo-comments').setup {
-    signs = false,
-}
 
 vim.keymap.set('n', '<leader>sf', fzf.files)
 vim.keymap.set('n', '<leader>sn', function()
@@ -318,7 +313,6 @@ vim.keymap.set('n', '<leader>sg', fzf.live_grep_native)
 vim.keymap.set('n', '<leader>/', fzf.lgrep_curbuf)
 vim.keymap.set('n', '<leader>sr', fzf.resume)
 vim.keymap.set('n', '<leader> ', fzf.buffers)
-vim.keymap.set('n', '<leader>sc', '<CMD>TodoFzfLua<CR>')
 
 vim.api.nvim_create_autocmd('LspAttach', {
     group = global_augroup,
@@ -361,10 +355,10 @@ gitsigns.setup {
         map('n', '<leader>gr', gitsigns.reset_hunk)
 
         map('n', '<leader>gn', function()
-            gitsigns.nav_hunk('next')
+            gitsigns.nav_hunk 'next'
         end)
         map('n', '<leader>gp', function()
-            gitsigns.nav_hunk('prev')
+            gitsigns.nav_hunk 'prev'
         end)
 
         map('v', '<leader>gs', function()
@@ -399,6 +393,15 @@ vim.api.nvim_create_user_command('Ex', 'Oil', {})
 require('snacks').setup {
     image = { enable = true },
 }
+
+local todo = require 'todo-comments'
+todo.setup {
+    signs = false,
+}
+
+vim.keymap.set('n', '<leader>sc', '<CMD>TodoFzfLua<CR>')
+vim.keymap.set('n', '[t', todo.jump_prev, { desc = 'Jump to previous TODO' })
+vim.keymap.set('n', ']t', todo.jump_next, { desc = 'Jump to next TODO' })
 
 -- Compile mode settings
 vim.g.compile_mode = {
@@ -448,7 +451,3 @@ vim.cmd [[
     highlight Cursor guifg=black guibg=orange
     highlight InCursor guifg=white guibg=blue
 ]]
-
-require('emoji').setup {
-    plugin_path = NVIM_PACK_PATH,
-}
