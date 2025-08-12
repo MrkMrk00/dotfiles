@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-NVIM_PATH="${HOME}/repos/neovim"
+NVIM_PATH="${HOME}/opt/nvim"
 CONFIG_PATH="${HOME}/.config/nvim-next/init.lua"
 
-VIMRUNTIME="${NVIM_PATH}/runtime" "${NVIM_PATH}/build/bin/nvim" -u "${CONFIG_PATH}" $@
+"${NVIM_PATH}/bin/nvim" -u "${CONFIG_PATH}" $@
 
