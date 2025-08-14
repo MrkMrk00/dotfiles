@@ -98,6 +98,7 @@ local plugins = {
     { src = 'git@github.com:stevearc/oil.nvim' },
     { src = 'git@github.com:folke/todo-comments.nvim.git' },
     { src = 'git@github.com:folke/snacks.nvim.git' }, -- for snacks.image
+    { src = 'git@github.com:MeanderingProgrammer/render-markdown.nvim.git' },
 
     -- Treesitter
     {
@@ -113,6 +114,7 @@ local plugins = {
     { src = 'git@github.com:mason-org/mason-lspconfig.nvim.git' },
     { src = 'git@github.com:folke/lazydev.nvim.git' },
     { src = 'git@github.com:stevearc/conform.nvim.git' },
+    { src = 'git@github.com:mfussenegger/nvim-lint.git' },
 
     { src = 'git@github.com:ibhagwan/fzf-lua.git' },
 
@@ -149,6 +151,7 @@ vim.pack.add(plugins, { load = false })
 pack_cleanup(plugins)
 
 -- Treesitter ====================
+
 ---@diagnostic disable-next-line: missing-fields
 require('nvim-treesitter.configs').setup {
     auto_install = true,
@@ -173,7 +176,7 @@ require('nvim-treesitter.configs').setup {
             goto_next_start = {
                 [']f'] = '@function.outer',
             },
-            goto_prev_start = {
+            goto_previous_start = {
                 ['[f'] = '@function.outer',
             },
         },
@@ -202,7 +205,7 @@ require('mason').setup {
     install_root_dir = vim.fn.stdpath 'data' .. 'mason-nvim-next',
 }
 require('mason-lspconfig').setup {
-    ensure_installed = { 'lua_ls', 'vtsls', 'clangd' },
+    ensure_installed = { 'lua_ls', 'vtsls', 'clangd', 'phpactor' },
 }
 require('lazydev').setup {}
 local conform = require 'conform'
@@ -217,6 +220,7 @@ conform.setup {
         c = { 'clang-format' },
         cpp = { 'clang-format' },
         go = { 'gofmt' },
+        php = { 'php-cs-fixer' },
     },
     formatters = {
         ['clang-format'] = {
@@ -226,9 +230,28 @@ conform.setup {
         },
     },
 }
+
+local lint = require 'lint'
+lint.linters_by_ft = {
+    php = { 'phpstan' },
+}
+
 vim.keymap.set('n', '<leader>f', function()
-    conform.format { async = true }
+    conform.format {
+        async = true,
+        callback = function()
+            lint.try_lint()
+        end,
+    }
 end)
+
+vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
+    group = global_augroup,
+    callback = function() end,
+})
+
+vim.keymap.del('n', 'grn')
+vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename)
 
 -- Autocomplete (with omnifunc) ====================
 
@@ -346,27 +369,29 @@ vim.keymap.set('n', '<leader>/', fzf.lgrep_curbuf)
 vim.keymap.set('n', '<leader>sr', fzf.resume)
 vim.keymap.set('n', '<leader> ', fzf.buffers)
 
+-- Those are native NVIM keybinds - they prefix with my custom -> slow
+vim.keymap.del({ 'n', 'v' }, 'gra')
+vim.keymap.del('n', 'grr')
+vim.keymap.del('n', 'gri')
+vim.keymap.del('n', 'grt')
+vim.keymap.del('n', 'gO')
+
 vim.api.nvim_create_autocmd('LspAttach', {
     group = global_augroup,
     callback = function()
-        -- Those are native NVIM keybinds, just remap them to use FzfLua instead native UI.
-        vim.keymap.set({ 'n', 'v' }, 'gra', fzf.lsp_code_actions)
-        vim.keymap.set('n', 'grr', fzf.lsp_references)
-        vim.keymap.set('n', 'gri', fzf.lsp_implementations)
-        vim.keymap.set('n', 'grt', fzf.lsp_typedefs)
-        vim.keymap.set('n', 'gO', fzf.lsp_document_symbols)
-
-        vim.keymap.set('n', 'grd', fzf.lsp_definitions)
-        vim.keymap.set('n', 'grD', fzf.lsp_declarations)
-        vim.keymap.set('n', '<leader>ca', fzf.lsp_code_actions)
-        vim.keymap.set('n', '<leader>ws', fzf.lsp_workspace_symbols)
+        vim.keymap.set('n', 'gr', fzf.lsp_references)
+        vim.keymap.set('n', 'gi', fzf.lsp_implementations)
+        vim.keymap.set('n', 'gt', fzf.lsp_typedefs)
+        vim.keymap.set('n', 'gd', fzf.lsp_definitions)
+        vim.keymap.set('n', 'gD', fzf.lsp_declarations)
+        vim.keymap.set({ 'n', 'v' }, '<leader>ca', fzf.lsp_code_actions)
+        vim.keymap.set('n', '<leader>ws', fzf.lsp_live_workspace_symbols)
 
         -- remap vim.diagnostic.setloclist to use fzf instead
         vim.keymap.set('n', '<leader>q', fzf.lsp_document_diagnostics)
         vim.keymap.set('n', '<leader>wq', fzf.lsp_workspace_diagnostics)
     end,
 })
-
 -- END FZF =======================
 
 -- GIT ===========================
@@ -481,6 +506,8 @@ vim.g.compile_mode = {
         },
     },
 }
+
+require('render-markdown').setup {}
 
 require('rose-pine').setup {
     styles = {
