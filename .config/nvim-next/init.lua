@@ -93,43 +93,55 @@ end
 
 -- local NVIM_PACK_PATH = vim.fn.stdpath 'data' .. '/site/pack/core/opt/'
 local plugins = {
+    -- Deps
     { src = 'git@github.com:nvim-lua/plenary.nvim.git' },
-    { src = 'git@github.com:rose-pine/neovim.git' },
-    { src = 'git@github.com:stevearc/oil.nvim' },
-    { src = 'git@github.com:folke/todo-comments.nvim.git' },
-    { src = 'git@github.com:folke/snacks.nvim.git' }, -- for snacks.image
+
+    -- Colorscheme
+    { src = 'git@github.com:rose-pine/neovim.git', name = 'rose-pine' },
+
+    -- Custom rendering in buffers
+    { src = 'git@github.com:m00qek/baleia.nvim.git' }, -- terminal color escape codes
+    { src = 'git@github.com:folke/snacks.nvim.git' }, -- snacks.image
     { src = 'git@github.com:MeanderingProgrammer/render-markdown.nvim.git' },
+    { src = 'git@github.com:folke/todo-comments.nvim.git' },
 
     -- Treesitter
     {
         src = 'git@github.com:nvim-treesitter/nvim-treesitter.git',
         version = 'master',
     },
-    { src = 'git@github.com:nvim-treesitter/nvim-treesitter-textobjects.git' },
     { src = 'git@github.com:windwp/nvim-ts-autotag.git' },
+    { src = 'git@github.com:nvim-treesitter/nvim-treesitter-textobjects.git' },
 
     -- Lsp
     { src = 'git@github.com:neovim/nvim-lspconfig.git' },
     { src = 'git@github.com:mason-org/mason.nvim.git' },
     { src = 'git@github.com:mason-org/mason-lspconfig.nvim.git' },
     { src = 'git@github.com:folke/lazydev.nvim.git' },
+
+    -- Format, lint
     { src = 'git@github.com:stevearc/conform.nvim.git' },
     { src = 'git@github.com:mfussenegger/nvim-lint.git' },
 
+    -- Fuzzy finder, UI select
     { src = 'git@github.com:ibhagwan/fzf-lua.git' },
+
+    -- File manager
+    { src = 'git@github.com:stevearc/oil.nvim' },
 
     -- Git
     { src = 'git@github.com:lewis6991/gitsigns.nvim.git' },
     { src = 'git@github.com:NeogitOrg/neogit.git' },
 
-    -- Compile mode
-    { src = 'git@github.com:m00qek/baleia.nvim.git' },
+    -- Emacs' compilation mode :)
     { src = 'git@github.com:ej-shafran/compile-mode.nvim.git' },
 
-    -- TODO: debug, snippets
+    -- Snippets
+    { src = 'git@github.com:L3MON4D3/LuaSnip.git' },
+
+    -- TODO: debug
 }
 
--- https://github.com/nvim-treesitter/nvim-treesitter/wiki/Installation
 vim.api.nvim_create_autocmd('PackChanged', {
     group = global_augroup,
     callback = function(ev)
@@ -137,12 +149,14 @@ vim.api.nvim_create_autocmd('PackChanged', {
             return
         end
 
-        vim.notify(vim.inspect(ev.data))
-
         if ev.data.spec.name == 'nvim-treesitter' then
             local do_update = require('nvim-treesitter.install').update { with_sync = true }
 
             do_update()
+        elseif ev.data.spec.name == 'LuaSnip' then
+            local makepath = ev.data.path
+
+            vim.notify(vim.fn.system { 'make', '-C', makepath, 'install_jsregexp' })
         end
     end,
 })
@@ -225,14 +239,20 @@ conform.setup {
     formatters = {
         ['clang-format'] = {
             args = {
-                '-style={BasedOnStyle: Mozilla, ColumnLimit: 120, IndentWidth: 4, AlwaysBreakAfterReturnType: None, AlwaysBreakAfterDefinitionReturnType: None, AllowShortFunctionsOnASingleLine: Empty}',
+                '-style={BasedOnStyle: Mozilla, ColumnLimit: 120, IndentWidth: 4, AlwaysBreakAfterReturnType: None, AlwaysBreakAfterDefinitionReturnType: None, AllowShortFunctionsOnASingleLine: Empty, BreakBeforeBraces: Linux, UseTab: Never, AllowShortIfStatementsOnASingleLine: true}',
             },
         },
     },
 }
 
 local lint = require 'lint'
+
 lint.linters_by_ft = {
+    javascript = { 'eslint' },
+    typescript = { 'eslint' },
+    typescriptreact = { 'eslint' },
+    javascriptreact = { 'eslint' },
+    vue = { 'eslint' },
     php = { 'phpstan' },
 }
 
@@ -253,9 +273,7 @@ vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
 vim.keymap.del('n', 'grn')
 vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename)
 
--- Autocomplete (with omnifunc) ====================
-
--- coq_nvim / nvim-cmp? Do I need it?
+-- Autocomplete ====================================
 local function autocomplete()
     if vim.fn.pumvisible() == 0 then
         local old_shortmess = vim.o.shortmess
@@ -278,6 +296,8 @@ vim.api.nvim_create_autocmd('InsertCharPre', {
     group = global_augroup,
     callback = autocomplete,
 })
+
+vim.keymap.set('i', '<C-Space>', autocomplete)
 -- END Autocomplete ====================
 
 -- Fallback for old eslint config file. TODO: Remove when not supported.
@@ -444,6 +464,59 @@ gitsigns.setup {
 }
 
 -- END GIT =======================
+
+-- Snippets ======================
+local ls = require 'luasnip'
+
+vim.keymap.set({ 'i', 's' }, '<C-L>', ls.expand_or_jump, { silent = true })
+vim.keymap.set({ 'i', 's' }, '<C-H>', function()
+    ls.jump(-1)
+end, { silent = true })
+
+local function register_php_snips()
+    local s = ls.snippet
+    local i = ls.insert_node
+    local fmt = require('luasnip.extras.fmt').fmt
+
+    local function method_snip(trigger, access_modifier)
+        local config = {
+            trig = trigger,
+            name = access_modifier .. ' function',
+        }
+
+        local format = fmt(
+            [[
+<am> function <fn>(): <type>
+{
+    <>
+}
+    ]],
+            {
+                am = access_modifier,
+                fn = i(1, 'ahoj'),
+                type = i(2, 'void'),
+                i(3, ''),
+            },
+            { delimiters = '<>' }
+        )
+
+        return s(config, format)
+    end
+
+    ls.add_snippets('php', {
+        method_snip('pubf', 'public'),
+        method_snip('prof', 'protected'),
+        method_snip('prif', 'private'),
+        method_snip('prisf', 'private static'),
+        method_snip('prosf', 'protected static'),
+        method_snip('pubsf', 'public static'),
+    })
+end
+
+register_php_snips()
+
+-- END Snippets ==================
+
 --  make builtin f, F, t, T repeatable with ; and ,
 vim.keymap.set({ 'n', 'x', 'o' }, 'f', ts_repeat_move.builtin_f_expr, { expr = true })
 vim.keymap.set({ 'n', 'x', 'o' }, 'F', ts_repeat_move.builtin_F_expr, { expr = true })
