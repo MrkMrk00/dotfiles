@@ -64,32 +64,12 @@ function M.setup()
         },
     }
 
-    local lint = require 'lint'
-    lint.linters_by_ft = {
-        javascript = { 'eslint' },
-        typescript = { 'eslint' },
-        typescriptreact = { 'eslint' },
-        javascriptreact = { 'eslint' },
-        vue = { 'eslint' },
-        php = { 'phpstan' },
-    }
-
     vim.keymap.set('n', '<leader>f', function()
         conform.format {
             async = true,
             lsp_format = 'fallback',
-            callback = function()
-                lint.try_lint()
-            end,
         }
     end)
-
-    vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
-        group = augroup,
-        callback = function()
-            lint.try_lint()
-        end,
-    })
 
     vim.api.nvim_create_autocmd('LspAttach', {
         group = augroup,
@@ -97,6 +77,9 @@ function M.setup()
             vim.opt.omnifunc = 'v:lua.vim.lsp.omnifunc'
         end,
     })
+
+    vim.keymap.del('n', 'grn')
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename)
 
     M._setup_vuejs()
 end

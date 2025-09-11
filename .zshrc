@@ -33,7 +33,7 @@ zinit_async zsh-users/zsh-completions
 zinit_async zsh-users/zsh-autosuggestions
 zinit_async joshskidmore/zsh-fzf-history-search
 
-PS1="%1~ > "
+PS1='%1~ %F{green}λ%f '
 
 autoload -Uz compinit && compinit
 

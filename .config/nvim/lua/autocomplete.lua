@@ -24,8 +24,6 @@ function M.setup()
         group = augroup,
         callback = M.autocomplete,
     })
-
-    vim.keymap.set('i', '<C-Space>', M.autocomplete)
 end
 
 return M
