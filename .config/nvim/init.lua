@@ -12,23 +12,6 @@ vim.opt.cursorline = true
 vim.opt.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
--- gofmt is stupid and uses tabs
-vim.api.nvim_create_autocmd('BufEnter', {
-    group = global_augroup,
-    pattern = '*.go',
-    callback = function()
-        vim.opt.listchars = { tab = '  ', trail = '·', nbsp = '␣' }
-    end,
-})
-
-vim.api.nvim_create_autocmd('BufLeave', {
-    group = global_augroup,
-    pattern = '*.go',
-    callback = function()
-        vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-    end,
-})
-
 vim.opt.shiftwidth = 4
 vim.opt.tabstop = 4
 vim.opt.expandtab = true
@@ -87,6 +70,7 @@ local plugins = {
 
     -- Formatter
     { src = 'git@github.com:stevearc/conform.nvim.git' },
+    { src = 'git@github.com:mfussenegger/nvim-lint.git' },
 
     -- Fuzzy finder, UI select
     { src = 'git@github.com:ibhagwan/fzf-lua.git' },

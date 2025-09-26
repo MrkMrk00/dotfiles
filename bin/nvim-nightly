@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-NVIM_PATH="${HOME}/opt/nvim"
-CONFIG_PATH="${HOME}/.config/nvim-next/init.lua"
-
-"${NVIM_PATH}/bin/nvim" -u "${CONFIG_PATH}" $@
-

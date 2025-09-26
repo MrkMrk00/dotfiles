@@ -54,6 +54,7 @@ function M.setup()
             cpp = { 'clang-format' },
             go = { 'gofmt' },
             php = { 'php-cs-fixer' },
+            python = { 'autopep8' },
         },
         formatters = {
             ['clang-format'] = {
@@ -62,6 +63,11 @@ function M.setup()
                 },
             },
         },
+    }
+
+    local lint = require('lint')
+    require('lint').linters_by_ft = {
+        python = { 'mypy', 'flake8' },
     }
 
     vim.keymap.set('n', '<leader>f', function()
@@ -75,6 +81,13 @@ function M.setup()
         group = augroup,
         callback = function()
             vim.opt.omnifunc = 'v:lua.vim.lsp.omnifunc'
+        end,
+    })
+
+    vim.api.nvim_create_autocmd('BufWritePost', {
+        group = augroup,
+        callback = function()
+            lint.try_lint()
         end,
     })
 

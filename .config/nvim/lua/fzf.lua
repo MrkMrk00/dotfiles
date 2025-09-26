@@ -9,6 +9,9 @@ function M.setup()
         files = {
             cwd_prompt = false,
         },
+        defaults = {
+            prompt = '',
+        },
     }
     fzf.register_ui_select()
 
@@ -21,6 +24,7 @@ function M.setup()
     vim.keymap.set('n', '<leader>/', fzf.lgrep_curbuf)
     vim.keymap.set('n', '<leader>sr', fzf.resume)
     vim.keymap.set('n', '<leader> ', fzf.buffers)
+    vim.keymap.set('n', '<leader>sm', fzf.manpages)
 
     -- Those are native NVIM keybinds :/
     vim.keymap.del({ 'n', 'v' }, 'gra')
@@ -41,7 +45,6 @@ function M.setup()
             vim.keymap.set('n', '<leader>ws', fzf.lsp_live_workspace_symbols)
 
             -- remap vim.diagnostic.setloclist to use fzf instead
-            vim.keymap.set('n', '<leader>q', fzf.lsp_document_diagnostics)
             vim.keymap.set('n', '<leader>wq', fzf.lsp_workspace_diagnostics)
         end,
     })
