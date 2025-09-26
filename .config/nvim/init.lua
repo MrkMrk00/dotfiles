@@ -104,8 +104,17 @@ lib.pack_cleanup(plugins)
 require('treesitter').setup()
 require('lsp').setup()
 require('git').setup()
-require('autocomplete').setup()
 require('fzf').setup()
+
+-- Completion ====================
+vim.opt.updatetime = 300
+vim.opt.completeopt = { 'menuone', 'noinsert', 'noselect', 'popup', 'fuzzy' }
+vim.opt.omnifunc = 'syntaxcomplete#Complete' -- vim's builtin syntax autocomplete as fallback - when no LSP gets attached
+
+vim.opt.autocomplete = true
+vim.opt.complete = { 'o', '.', 'w', 'f' }
+vim.opt.completefuzzycollect = 'keyword'
+-- END Completion ================
 
 -- Snippets ======================
 require('luasnip.loaders.from_lua').lazy_load { paths = { './snippets' } }
