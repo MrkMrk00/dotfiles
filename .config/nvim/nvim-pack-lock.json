@@ -1,34 +1,34 @@
 {
   "plugins": {
     "LuaSnip": {
-      "rev": "7381330"
+      "rev": "21e9fec"
     },
     "conform.nvim": {
-      "rev": "9d859cb"
+      "rev": "fbcb4fa"
     },
     "fzf-lua": {
-      "rev": "4333179"
+      "rev": "db45bab"
     },
     "gitsigns.nvim": {
       "rev": "1ee5c1f"
     },
     "lazydev.nvim": {
-      "rev": "258d2a5"
+      "rev": "e28ce52"
     },
     "mason-lspconfig.nvim": {
-      "rev": "155eac5"
+      "rev": "6bdb14f"
     },
     "mason.nvim": {
       "rev": "ad7146a"
     },
     "neogit": {
-      "rev": "90dcfa7b"
+      "rev": "0f48491a"
     },
     "nvim-lint": {
-      "rev": "335a604"
+      "rev": "9da1fb9"
     },
     "nvim-lspconfig": {
-      "rev": "e688b48"
+      "rev": "ac98db2"
     },
     "nvim-treesitter": {
       "rev": "42fc28ba",
@@ -48,15 +48,15 @@
       "src": "git@github.com:windwp/nvim-ts-autotag.git"
     },
     "oil.nvim": {
-      "rev": "919e155"
+      "rev": "7194872"
     },
     "plenary.nvim": [],
     "render-markdown.nvim": {
-      "rev": "7e6af36"
+      "rev": "691651d"
     },
     "rose-pine": [],
     "snacks.nvim": {
-      "rev": "bfe8c26"
+      "rev": "454ba02"
     }
   }
 }
