@@ -33,7 +33,39 @@ zinit_async zsh-users/zsh-completions
 zinit_async zsh-users/zsh-autosuggestions
 zinit_async joshskidmore/zsh-fzf-history-search
 
-PS1='%1~ %F{green}λ%f '
+function -aws-profile() {
+    if [[ -z "${AWS_PROFILE}" ]]; then
+        return
+    fi
+
+    echo "%{%F{214}%}(${AWS_PROFILE})%f "
+}
+
+function -kube-context() {
+    if ! $(which kubectl > /dev/null 2>&1); then
+        return
+    fi
+
+    local current_context=$(kubectl config current-context)
+    if [[ "${current_context}" == 'default' ]]; then
+        return
+    fi
+
+    echo "%{%F{21}%}(${current_context})%f "
+}
+
+function profile-local() {
+    unset AWS_PROFILE
+    kubectl config use-context default
+}
+
+function profile-apify-staging() {
+    export AWS_PROFILE="apify-staging"
+    kubectl config use-context apify-primary
+}
+
+setopt promptsubst
+PS1='$(-aws-profile)$(-kube-context)%1~ %F{green}λ%f '
 
 autoload -Uz compinit && compinit
 
@@ -41,12 +73,23 @@ zinit cdreplay -q
 
 alias ls='ls --color'
 alias ll='ls -lah'
-alias vim='nvim'
 alias k="kubectl"
 
-alias gs='git status'
-alias gf='git fetch && git pull'
+# git fetch and pull current branch
+function gf() {
+    local branch_name=$(git name-rev --name-only HEAD)
+    echo "fetching changes from \"${branch_name}\""
+    if [[ $? != 0 ]]; then
+        echo 'failed to get current branch name'
+        return
+    fi
+
+    git fetch origin "$branch_name" && git pull
+}
+
 alias gam='git commit --amend --no-edit'
+
+alias fd='fd --color=never'
 
 mkcd() {
   mkdir -p "$1" && cd "$1"
@@ -81,7 +124,9 @@ export COREPACK_ENABLE_AUTO_PIN=0
 export COMPOSER_BIN="${HOME}/.config/composer/vendor/bin"
 export GPG_TTY=$(tty)
 
-PATH="${PATH}:${HOME}/bin:${GOBIN}:${COMPOSER_BIN}:${HOME}/.ghcup/bin:${HOME}/opt/nvim/bin"
+TINYTEX_PATH="${HOME}/opt/tinytex/bin/universal-darwin"
+
+PATH="${PATH}:${HOME}/bin:${GOBIN}:${COMPOSER_BIN}:${HOME}/.ghcup/bin:${HOME}/opt/nvim/bin:/usr/local/vanta:${TINYTEX_PATH}"
 
 # pnpm
 export PNPM_HOME="/Users/marek/Library/pnpm"

@@ -54,7 +54,7 @@ function M.setup()
             cpp = { 'clang-format' },
             go = { 'gofmt' },
             php = { 'php-cs-fixer' },
-            python = { 'autopep8' },
+            python = { 'autopep8', 'isort' },
         },
         formatters = {
             ['clang-format'] = {
@@ -65,15 +65,16 @@ function M.setup()
         },
     }
 
-    local lint = require('lint')
+    local lint = require 'lint'
     require('lint').linters_by_ft = {
-        python = { 'mypy', 'flake8' },
+        python = { 'mypy', 'pflake8' },
     }
 
     vim.keymap.set('n', '<leader>f', function()
         conform.format {
             async = true,
             lsp_format = 'fallback',
+            -- quiet = true,
         }
     end)
 
@@ -87,7 +88,9 @@ function M.setup()
     vim.api.nvim_create_autocmd('BufWritePost', {
         group = augroup,
         callback = function()
-            lint.try_lint()
+            lint.try_lint(nil, {
+                ignore_errors = true,
+            })
         end,
     })
 

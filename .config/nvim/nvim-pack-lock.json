@@ -1,0 +1,62 @@
+{
+  "plugins": {
+    "LuaSnip": {
+      "rev": "7381330"
+    },
+    "conform.nvim": {
+      "rev": "9d859cb"
+    },
+    "fzf-lua": {
+      "rev": "4333179"
+    },
+    "gitsigns.nvim": {
+      "rev": "1ee5c1f"
+    },
+    "lazydev.nvim": {
+      "rev": "258d2a5"
+    },
+    "mason-lspconfig.nvim": {
+      "rev": "155eac5"
+    },
+    "mason.nvim": {
+      "rev": "ad7146a"
+    },
+    "neogit": {
+      "rev": "90dcfa7b"
+    },
+    "nvim-lint": {
+      "rev": "335a604"
+    },
+    "nvim-lspconfig": {
+      "rev": "e688b48"
+    },
+    "nvim-treesitter": {
+      "rev": "42fc28ba",
+      "src": "git@github.com:nvim-treesitter/nvim-treesitter.git",
+      "version": "'master'"
+    },
+    "nvim-treesitter-context": {
+      "rev": "41847d3",
+      "src": "git@github.com:nvim-treesitter/nvim-treesitter-context.git"
+    },
+    "nvim-treesitter-textobjects": {
+      "rev": "71385f1",
+      "src": "git@github.com:nvim-treesitter/nvim-treesitter-textobjects.git"
+    },
+    "nvim-ts-autotag": {
+      "rev": "c4ca798",
+      "src": "git@github.com:windwp/nvim-ts-autotag.git"
+    },
+    "oil.nvim": {
+      "rev": "919e155"
+    },
+    "plenary.nvim": [],
+    "render-markdown.nvim": {
+      "rev": "7e6af36"
+    },
+    "rose-pine": [],
+    "snacks.nvim": {
+      "rev": "bfe8c26"
+    }
+  }
+}

@@ -4,7 +4,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.mouse = 'a' -- enable mouse in all modes
+vim.opt.swapfile = false
 vim.opt.showmode = true
 vim.opt.signcolumn = 'yes'
 vim.opt.cursorline = true
@@ -31,7 +31,7 @@ vim.opt.undofile = true
 -- TODO: remove
 vim.opt.clipboard = 'unnamedplus'
 
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+vim.keymap.set('n', '<Esc>', '<CMD>nohlsearch<CR>')
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic error messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setqflist, { desc = 'Open diagnostic quickfix list' })
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
@@ -61,6 +61,7 @@ local plugins = {
     },
     { src = 'git@github.com:windwp/nvim-ts-autotag.git' },
     { src = 'git@github.com:nvim-treesitter/nvim-treesitter-textobjects.git' },
+    { src = 'git@github.com:nvim-treesitter/nvim-treesitter-context.git' },
 
     -- Lsp
     { src = 'git@github.com:neovim/nvim-lspconfig.git' },
@@ -107,13 +108,17 @@ require('git').setup()
 require('fzf').setup()
 
 -- Completion ====================
-vim.opt.updatetime = 300
-vim.opt.completeopt = { 'menuone', 'noinsert', 'noselect', 'popup', 'fuzzy' }
-vim.opt.omnifunc = 'syntaxcomplete#Complete' -- vim's builtin syntax autocomplete as fallback - when no LSP gets attached
-
-vim.opt.autocomplete = true
-vim.opt.complete = { 'o', '.', 'w', 'f' }
 vim.opt.completefuzzycollect = 'keyword'
+vim.opt.completeopt = {
+    'fuzzy',
+    'menuone',
+    'noinsert',
+    'noselect',
+    'popup',
+}
+vim.opt.omnifunc = 'syntaxcomplete#Complete'
+vim.opt.autocomplete = true
+vim.opt.complete = { 'o', '.' }
 -- END Completion ================
 
 -- Snippets ======================
