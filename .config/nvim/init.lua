@@ -46,13 +46,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 local plugins = {
     { src = 'git@github.com:rose-pine/neovim.git', name = 'rose-pine' },
-
-    -- Deps
     { src = 'git@github.com:nvim-lua/plenary.nvim.git' },
-
-    -- Custom rendering in buffers
-    { src = 'git@github.com:folke/snacks.nvim.git' }, -- snacks.image
-    { src = 'git@github.com:MeanderingProgrammer/render-markdown.nvim.git' },
 
     -- Treesitter
     {
@@ -117,8 +111,22 @@ vim.opt.completeopt = {
     'popup',
 }
 vim.opt.omnifunc = 'syntaxcomplete#Complete'
+
 vim.opt.autocomplete = true
 vim.opt.complete = { 'o', '.' }
+vim.opt.autocompletetimeout = 200
+vim.opt.autocompletedelay = 500
+
+vim.keymap.set('i', '<CR>', function()
+    if vim.fn.pumvisible() == 1 then
+        -- popup menu visible: close it, then insert newline
+        return vim.api.nvim_replace_termcodes('<C-e><CR>', true, false, true)
+    else
+        -- no popup menu: just newline
+        return vim.api.nvim_replace_termcodes('<CR>', true, false, true)
+    end
+end, { expr = true })
+
 -- END Completion ================
 
 -- Snippets ======================
@@ -144,12 +152,6 @@ oil.setup {
 }
 
 vim.api.nvim_create_user_command('Ex', 'Oil', {})
-
-require('snacks').setup {
-    image = { enable = true },
-}
-
-require('render-markdown').setup {}
 
 -- Colors ========================================
 require('rose-pine').setup {

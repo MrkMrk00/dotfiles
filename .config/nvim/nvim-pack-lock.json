@@ -51,12 +51,6 @@
       "rev": "7194872"
     },
     "plenary.nvim": [],
-    "render-markdown.nvim": {
-      "rev": "691651d"
-    },
-    "rose-pine": [],
-    "snacks.nvim": {
-      "rev": "454ba02"
-    }
+    "rose-pine": []
   }
 }
