@@ -62,6 +62,8 @@ function M.setup()
                     '-style={BasedOnStyle: Mozilla, ColumnLimit: 120, IndentWidth: 4, AlwaysBreakAfterReturnType: None, AlwaysBreakAfterDefinitionReturnType: None, AllowShortFunctionsOnASingleLine: Empty, BreakBeforeBraces: Linux, UseTab: Never, AllowShortIfStatementsOnASingleLine: true}',
                 },
             },
+            prettierd = { require_cwd = true },
+            prettier = { require_cwd = true },
         },
     }
 
