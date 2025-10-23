@@ -189,19 +189,20 @@ require('render-markdown').setup {
 local is_avante_initialized = false
 local AVANTE_INITIALIZED_EVENT = 'AvanteInitialized'
 
-vim.system({ 'bw', 'get', 'password', 'Claude Code' }, { text = true }, function(result)
-    if result.code ~= 0 then
-        vim.notify(result.stderr, vim.log.levels.ERROR)
-
-        return
-    end
-
+vim.system({ 'bw', '--nointeraction', 'get', 'password', 'Claude Code' }, { text = true }, function(result)
     vim.schedule(function()
+        if result.code ~= 0 then
+            vim.notify('[Avante] failed to load claude API key: ' .. result.stderr, vim.log.levels.ERROR)
+
+            return
+        end
+
         vim.env.AVANTE_ANTHROPIC_API_KEY = result.stdout
 
         require('avante').setup {
             behaviour = {
-                auto_suggestions = true,
+                auto_suggestions = false,
+                auto_approve_tool_permissions = false,
             },
             auto_suggestions_provider = 'claude',
             provider = 'claude',
