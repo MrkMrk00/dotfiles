@@ -3,6 +3,10 @@
     "LuaSnip": {
       "rev": "21e9fec"
     },
+    "avante.nvim": {
+      "rev": "164a86d",
+      "src": "git@github.com:yetone/avante.nvim.git"
+    },
     "conform.nvim": {
       "rev": "fbcb4fa"
     },
@@ -23,6 +27,10 @@
     },
     "neogit": {
       "rev": "0f48491a"
+    },
+    "nui.nvim": {
+      "rev": "de74099",
+      "src": "git@github.com:MunifTanjim/nui.nvim.git"
     },
     "nvim-lint": {
       "rev": "9da1fb9"
@@ -51,6 +59,14 @@
       "rev": "7194872"
     },
     "plenary.nvim": [],
-    "rose-pine": []
+    "render-markdown.nvim": {
+      "rev": "475d3ad",
+      "src": "git@github.com:MeanderingProgrammer/render-markdown.nvim.git"
+    },
+    "rose-pine": [],
+    "vim-sleuth": {
+      "rev": "be69bff",
+      "src": "git@github.com:tpope/vim-sleuth.git"
+    }
   }
 }

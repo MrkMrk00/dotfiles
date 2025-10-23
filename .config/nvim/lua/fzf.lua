@@ -8,9 +8,14 @@ function M.setup()
         { 'borderless-full' },
         files = {
             cwd_prompt = false,
+            follow = true,
         },
         defaults = {
             prompt = '',
+        },
+        grep = {
+            hidden = true,
+            follow = true,
         },
     }
     fzf.register_ui_select()
@@ -25,6 +30,21 @@ function M.setup()
     vim.keymap.set('n', '<leader>sr', fzf.resume)
     vim.keymap.set('n', '<leader> ', fzf.buffers)
     vim.keymap.set('n', '<leader>sm', fzf.manpages)
+
+    vim.keymap.set({ 'n', 'v' }, '<leader>ss', function()
+        local mode = vim.api.nvim_get_mode()
+
+        if mode.blocking or mode.mode == 'n' then
+            fzf.grep {
+                search = vim.fn.expand '<cword>',
+                lgrep = true,
+            }
+
+            return
+        end
+
+        fzf.grep_visual()
+    end)
 
     -- Those are native NVIM keybinds :/
     vim.keymap.del({ 'n', 'v' }, 'gra')

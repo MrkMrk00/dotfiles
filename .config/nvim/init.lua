@@ -47,6 +47,10 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 local plugins = {
     { src = 'git@github.com:rose-pine/neovim.git', name = 'rose-pine' },
     { src = 'git@github.com:nvim-lua/plenary.nvim.git' },
+    { src = 'git@github.com:tpope/vim-sleuth.git' },
+    { src = 'git@github.com:yetone/avante.nvim.git' },
+    { src = 'git@github.com:MeanderingProgrammer/render-markdown.nvim.git' },
+    { src = 'git@github.com:MunifTanjim/nui.nvim.git' },
 
     -- Treesitter
     {
@@ -91,6 +95,11 @@ lib.pack_on_plugin_change('LuaSnip', function(ev)
     local makepath = ev.data.path
 
     vim.notify(vim.fn.system { 'make', '-C', makepath, 'install_jsregexp' })
+end)
+lib.pack_on_plugin_change('avante.nvim', function(ev)
+    local makepath = ev.data.path
+
+    vim.notify(vim.fn.system { 'make', '-C', makepath })
 end)
 
 lib.pack_register_plugins(plugins)
@@ -171,3 +180,63 @@ vim.cmd [[
     highlight Cursor guifg=black guibg=orange
     highlight InCursor guifg=white guibg=blue
 ]]
+
+-- AI ========================================
+require('render-markdown').setup {
+    file_types = { 'markdown', 'Avante' },
+}
+
+local is_avante_initialized = false
+local AVANTE_INITIALIZED_EVENT = 'AvanteInitialized'
+
+vim.system({ 'bw', 'get', 'password', 'Claude Code' }, { text = true }, function(result)
+    if result.code ~= 0 then
+        vim.notify(result.stderr, vim.log.levels.ERROR)
+
+        return
+    end
+
+    vim.schedule(function()
+        vim.env.AVANTE_ANTHROPIC_API_KEY = result.stdout
+
+        require('avante').setup {
+            behaviour = {
+                auto_suggestions = true,
+            },
+            auto_suggestions_provider = 'claude',
+            provider = 'claude',
+            providers = {
+                claude = {
+                    endpoint = 'https://api.anthropic.com',
+                    model = 'claude-sonnet-4-5-20250929',
+                    timeout = 30000,
+                    extra_request_body = {
+                        temperature = 0.75,
+                        max_tokens = 20480,
+                    },
+                },
+            },
+        }
+
+        is_avante_initialized = true
+        vim.api.nvim_exec_autocmds('User', {
+            pattern = AVANTE_INITIALIZED_EVENT,
+        })
+    end)
+end)
+
+vim.api.nvim_create_user_command('ZenMode', function()
+    if is_avante_initialized then
+        require('avante.api').zen_mode()
+        return
+    end
+
+    vim.notify('waiting for avante to get initialized...', vim.log.levels.INFO)
+    vim.api.nvim_create_autocmd('User', {
+        pattern = AVANTE_INITIALIZED_EVENT,
+        once = true,
+        callback = function()
+            require('avante.api').zen_mode()
+        end,
+    })
+end, {})

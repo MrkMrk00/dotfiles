@@ -74,6 +74,7 @@ zinit cdreplay -q
 alias ls='ls --color'
 alias ll='ls -lah'
 alias k="kubectl"
+alias avante='nvim -c "ZenMode"'
 
 # git fetch and pull current branch
 function gf() {
@@ -123,6 +124,7 @@ export GOBIN="${GOPATH}/bin"
 export COREPACK_ENABLE_AUTO_PIN=0
 export COMPOSER_BIN="${HOME}/.config/composer/vendor/bin"
 export GPG_TTY=$(tty)
+[[ -f ".EXPORT_VARS" ]] && source ./.EXPORT_VARS
 
 TINYTEX_PATH="${HOME}/opt/tinytex/bin/universal-darwin"
 
@@ -139,3 +141,4 @@ esac
 
 eval "$(fnm env --use-on-cd --corepack-enabled)"
 source "$HOME/.cargo/env"
+
