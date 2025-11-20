@@ -4,6 +4,7 @@ function M.setup()
     ---@diagnostic disable-next-line: missing-fields
     require('nvim-treesitter.configs').setup {
         auto_install = true,
+        ensure_installed = { 'gotmpl', 'yaml' },
         indent = { enable = true },
         highlight = { enable = true },
         additional_vim_regex_highlighting = { 'tex' },

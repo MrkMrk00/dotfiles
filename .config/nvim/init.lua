@@ -36,6 +36,12 @@ vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagn
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setqflist, { desc = 'Open diagnostic quickfix list' })
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
+vim.keymap.set('n', '<leader>sl', function()
+    local search_term = vim.fn.expand '<cword>'
+
+    vim.api.nvim_feedkeys(vim.keycode('/' .. search_term .. '<CR>'), 'n', false)
+end)
+
 vim.api.nvim_create_autocmd('TextYankPost', {
     desc = 'Highlight when yanking (copying) text',
     group = global_augroup,
@@ -44,13 +50,20 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     end,
 })
 
+vim.filetype.add {
+    pattern = {
+        ['.*/helmfile.ya?ml'] = 'helm',
+        ['.*/templates/.*%.ya?ml'] = 'helm',
+    },
+}
+
 local plugins = {
     { src = 'git@github.com:rose-pine/neovim.git', name = 'rose-pine' },
     { src = 'git@github.com:nvim-lua/plenary.nvim.git' },
     { src = 'git@github.com:tpope/vim-sleuth.git' },
     { src = 'git@github.com:yetone/avante.nvim.git' },
-    { src = 'git@github.com:MeanderingProgrammer/render-markdown.nvim.git' },
     { src = 'git@github.com:MunifTanjim/nui.nvim.git' },
+    { src = 'git@github.com:lukas-reineke/indent-blankline.nvim.git' },
 
     -- Treesitter
     {
@@ -122,7 +135,11 @@ vim.opt.completeopt = {
 vim.opt.omnifunc = 'syntaxcomplete#Complete'
 
 vim.opt.autocomplete = true
-vim.opt.complete = { 'o', '.' }
+vim.opt.complete = {
+    'o', -- omnifunc
+    '.', -- current buffer
+    'w', -- buffers in other windows
+}
 vim.opt.autocompletetimeout = 200
 vim.opt.autocompletedelay = 500
 
