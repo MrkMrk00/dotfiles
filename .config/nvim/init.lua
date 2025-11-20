@@ -28,6 +28,9 @@ vim.opt.splitbelow = true
 vim.opt.termguicolors = true
 vim.opt.undofile = true
 
+vim.opt.spell = true
+vim.opt.spelllang = { 'en_us' }
+
 -- TODO: remove
 vim.opt.clipboard = 'unnamedplus'
 
@@ -52,7 +55,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 vim.filetype.add {
     pattern = {
-        ['.*/helmfile.ya?ml'] = 'helm',
+        ['.*/.*%helmfile.*%.ya?ml'] = 'helm',
         ['.*/templates/.*%.ya?ml'] = 'helm',
     },
 }
@@ -74,7 +77,7 @@ local plugins = {
     { src = 'git@github.com:nvim-treesitter/nvim-treesitter-textobjects.git' },
     { src = 'git@github.com:nvim-treesitter/nvim-treesitter-context.git' },
 
-    -- Lsp
+    -- LSP
     { src = 'git@github.com:neovim/nvim-lspconfig.git' },
     { src = 'git@github.com:mason-org/mason.nvim.git' },
     { src = 'git@github.com:mason-org/mason-lspconfig.nvim.git' },
