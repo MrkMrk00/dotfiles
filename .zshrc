@@ -25,12 +25,13 @@ zinit_async() {
     zinit light $@
 }
 
+# cannot be loaded asynchronously
 zinit ice depth=1; zinit light jeffreytse/zsh-vi-mode
+zinit light zsh-users/zsh-autosuggestions
 
 zinit_async Aloxaf/fzf-tab
 zinit_async zsh-users/zsh-syntax-highlighting
 zinit_async zsh-users/zsh-completions
-zinit_async zsh-users/zsh-autosuggestions
 zinit_async joshskidmore/zsh-fzf-history-search
 
 function -aws-profile() {
@@ -64,13 +65,13 @@ function profile-apify-staging() {
     kubectl config use-context apify-primary
 }
 
-setopt promptsubst
-PS1='$(-aws-profile)$(-kube-context)%1~ %F{green}λ%f '
+
 
 autoload -Uz compinit && compinit
 
 zinit cdreplay -q
 
+alias git='git branchless wrap --'
 alias ls='ls --color'
 alias ll='ls -lah'
 alias k="kubectl"
@@ -107,6 +108,10 @@ setopt hist_ignore_all_dups
 setopt hist_save_no_dups
 setopt hist_ignore_dups
 setopt hist_find_no_dups
+setopt completealiases # autocomplete commands, even if they are aliased
+setopt promptsubst     # PS1 substitutions
+
+PS1='$(-aws-profile)$(-kube-context)%1~ %F{green}λ%f '
 
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"

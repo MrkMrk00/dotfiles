@@ -16,6 +16,10 @@
     "gitsigns.nvim": {
       "rev": "1ee5c1f"
     },
+    "indent-blankline.nvim": {
+      "rev": "005b560",
+      "src": "git@github.com:lukas-reineke/indent-blankline.nvim.git"
+    },
     "lazydev.nvim": {
       "rev": "e28ce52"
     },
@@ -59,10 +63,6 @@
       "rev": "7194872"
     },
     "plenary.nvim": [],
-    "render-markdown.nvim": {
-      "rev": "475d3ad",
-      "src": "git@github.com:MeanderingProgrammer/render-markdown.nvim.git"
-    },
     "rose-pine": [],
     "vim-sleuth": {
       "rev": "be69bff",
