@@ -24,21 +24,13 @@ function M.setup()
                 enable = true,
                 set_jumps = true,
                 goto_next_start = {
-                    [']f'] = '@function.outer',
+                    [']m'] = '@function.outer',
                 },
                 goto_previous_start = {
-                    ['[f'] = '@function.outer',
+                    ['[m'] = '@function.outer',
                 },
             },
         },
-    }
-
-    require('treesitter-context').setup {
-        enable = true,
-        max_lines = 3,
-
-        -- keep top-most context
-        trim_scope = 'inner',
     }
 
     local ts_repeat_move = require 'nvim-treesitter.textobjects.repeatable_move'

@@ -39,12 +39,6 @@ vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagn
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setqflist, { desc = 'Open diagnostic quickfix list' })
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
-vim.keymap.set('n', '<leader>sl', function()
-    local search_term = vim.fn.expand '<cword>'
-
-    vim.api.nvim_feedkeys(vim.keycode('/' .. search_term .. '<CR>'), 'n', false)
-end)
-
 vim.api.nvim_create_autocmd('TextYankPost', {
     desc = 'Highlight when yanking (copying) text',
     group = global_augroup,
@@ -75,7 +69,6 @@ local plugins = {
     },
     { src = 'git@github.com:windwp/nvim-ts-autotag.git' },
     { src = 'git@github.com:nvim-treesitter/nvim-treesitter-textobjects.git' },
-    { src = 'git@github.com:nvim-treesitter/nvim-treesitter-context.git' },
 
     -- LSP
     { src = 'git@github.com:neovim/nvim-lspconfig.git' },
@@ -202,17 +195,41 @@ vim.cmd [[
 ]]
 
 -- AI ========================================
-require('render-markdown').setup {
-    file_types = { 'markdown', 'Avante' },
-}
-
 local is_avante_initialized = false
 local AVANTE_INITIALIZED_EVENT = 'AvanteInitialized'
+
+local function load_brave_api_key()
+    local error_message = '[Avante] failed to load Brave Search API key: '
+
+    vim.system({ 'bw', '--nointeraction', 'get', 'item', 'search.brave.com' }, { text = true }, function(result)
+        vim.schedule(function()
+            if result.code ~= 0 then
+                vim.notify(error_message .. result.stderr, vim.log.levels.INFO)
+
+                return
+            end
+
+            local item = vim.json.decode(result.stdout)
+
+            for _, value in ipairs(item.fields) do
+                if value.name == 'AVANTE_API_KEY' then
+                    vim.env.BRAVE_API_KEY = value.value
+
+                    return
+                end
+            end
+
+            vim.notify(error_message .. 'key not found in bw json object')
+        end)
+    end)
+end
+
+load_brave_api_key()
 
 vim.system({ 'bw', '--nointeraction', 'get', 'password', 'Claude Code' }, { text = true }, function(result)
     vim.schedule(function()
         if result.code ~= 0 then
-            vim.notify('[Avante] failed to load claude API key: ' .. result.stderr, vim.log.levels.ERROR)
+            vim.notify('[Avante] failed to load claude API key: ' .. result.stderr, vim.log.levels.INFO)
 
             return
         end
@@ -226,10 +243,13 @@ vim.system({ 'bw', '--nointeraction', 'get', 'password', 'Claude Code' }, { text
             },
             auto_suggestions_provider = 'claude',
             provider = 'claude',
+            web_search_engine = {
+                provider = 'brave',
+            },
             providers = {
                 claude = {
                     endpoint = 'https://api.anthropic.com',
-                    model = 'claude-sonnet-4-5-20250929',
+                    model = 'claude-haiku-4-5-20251001',
                     timeout = 30000,
                     extra_request_body = {
                         temperature = 0.75,

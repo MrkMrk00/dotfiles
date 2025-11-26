@@ -35,37 +35,39 @@ zinit_async zsh-users/zsh-completions
 zinit_async joshskidmore/zsh-fzf-history-search
 
 function -aws-profile() {
+    local yellow='%F{214}%'
     if [[ -z "${AWS_PROFILE}" ]]; then
         return
     fi
 
-    echo "%{%F{214}%}(${AWS_PROFILE})%f "
+    echo "%{${yellow}}(${AWS_PROFILE})%f "
 }
 
 function -kube-context() {
-    if ! $(which kubectl > /dev/null 2>&1); then
-        return
-    fi
-
+    local dark_blue='%F{21}%'
     local current_context=$(kubectl config current-context)
+
     if [[ "${current_context}" == 'default' ]]; then
         return
     fi
 
-    echo "%{%F{21}%}(${current_context})%f "
+    echo "%{${dark_blue}}(${current_context})%f "
 }
 
-function profile-local() {
-    unset AWS_PROFILE
-    kubectl config use-context default
+function use-profile() {
+    local profile_name="$1"
+
+    if [[ "${profile_name}" == 'local' || "${profile_name}" == 'default' ]]; then
+        unset AWS_PROFILE
+        kubectl config use-context default
+
+        return
+    fi
+
+    export AWS_PROFILE="apify-${profile_name}"
+    kubectl config use-context "apify-${profile_name}" || \
+        kubectl config use-context default
 }
-
-function profile-apify-staging() {
-    export AWS_PROFILE="apify-staging"
-    kubectl config use-context apify-primary
-}
-
-
 
 autoload -Uz compinit && compinit
 
@@ -74,7 +76,7 @@ zinit cdreplay -q
 alias git='git branchless wrap --'
 alias ls='ls --color'
 alias ll='ls -lah'
-alias k="kubectl"
+alias k='kubectl'
 alias avante='nvim -c "ZenMode"'
 
 # git fetch and pull current branch

@@ -5,7 +5,7 @@ local augroup = vim.api.nvim_create_augroup('config-fzf-augroup', { clear = true
 function M.setup()
     local fzf = require 'fzf-lua'
     fzf.setup {
-        { 'ivy', 'borderless-full' },
+        { 'telescope', 'borderless-full' },
         files = {
             cwd_prompt = false,
             follow = true,
