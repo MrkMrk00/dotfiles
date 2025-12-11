@@ -120,7 +120,7 @@ require('git').setup()
 require('fzf').setup()
 
 -- Completion ====================
-vim.opt.completefuzzycollect = 'keyword'
+-- vim.opt.completefuzzycollect = 'keyword'
 vim.opt.completeopt = {
     'fuzzy',
     'menuone',
@@ -194,90 +194,3 @@ vim.cmd [[
     highlight InCursor guifg=white guibg=blue
 ]]
 
--- AI ========================================
-local is_avante_initialized = false
-local AVANTE_INITIALIZED_EVENT = 'AvanteInitialized'
-
-local function load_brave_api_key()
-    local error_message = '[Avante] failed to load Brave Search API key: '
-
-    vim.system({ 'bw', '--nointeraction', 'get', 'item', 'search.brave.com' }, { text = true }, function(result)
-        vim.schedule(function()
-            if result.code ~= 0 then
-                vim.notify(error_message .. result.stderr, vim.log.levels.INFO)
-
-                return
-            end
-
-            local item = vim.json.decode(result.stdout)
-
-            for _, value in ipairs(item.fields) do
-                if value.name == 'AVANTE_API_KEY' then
-                    vim.env.BRAVE_API_KEY = value.value
-
-                    return
-                end
-            end
-
-            vim.notify(error_message .. 'key not found in bw json object')
-        end)
-    end)
-end
-
-load_brave_api_key()
-
-vim.system({ 'bw', '--nointeraction', 'get', 'password', 'Claude Code' }, { text = true }, function(result)
-    vim.schedule(function()
-        if result.code ~= 0 then
-            vim.notify('[Avante] failed to load claude API key: ' .. result.stderr, vim.log.levels.INFO)
-
-            return
-        end
-
-        vim.env.AVANTE_ANTHROPIC_API_KEY = result.stdout
-
-        require('avante').setup {
-            behaviour = {
-                auto_suggestions = false,
-                auto_approve_tool_permissions = false,
-            },
-            auto_suggestions_provider = 'claude',
-            provider = 'claude',
-            web_search_engine = {
-                provider = 'brave',
-            },
-            providers = {
-                claude = {
-                    endpoint = 'https://api.anthropic.com',
-                    model = 'claude-haiku-4-5-20251001',
-                    timeout = 30000,
-                    extra_request_body = {
-                        temperature = 0.75,
-                        max_tokens = 20480,
-                    },
-                },
-            },
-        }
-
-        is_avante_initialized = true
-        vim.api.nvim_exec_autocmds('User', {
-            pattern = AVANTE_INITIALIZED_EVENT,
-        })
-    end)
-end)
-
-vim.api.nvim_create_user_command('ZenMode', function()
-    if is_avante_initialized then
-        require('avante.api').zen_mode()
-        return
-    end
-
-    vim.notify('waiting for avante to get initialized...', vim.log.levels.INFO)
-    vim.api.nvim_create_autocmd('User', {
-        pattern = AVANTE_INITIALIZED_EVENT,
-        once = true,
-        callback = function()
-            require('avante.api').zen_mode()
-        end,
-    })
-end, {})
