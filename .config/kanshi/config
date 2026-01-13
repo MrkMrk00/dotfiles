@@ -1,0 +1,20 @@
+profile "Vrchlabí" {
+    output eDP-1 enable position 0,0
+    output "Fujitsu Siemens Computers GmbH SL23T-1 LED YV4D130364" enable position 1920,0
+}
+
+profile "Work" {
+    output "Lenovo Group Limited LEN T27p-10 0x48505738" enable scale 1.5 position 0,0
+    output eDP-1 disable
+}
+
+profile "Laptop only" {
+    output eDP-1 enable
+}
+
+profile "Other" {
+    output eDP-1 enable
+    output * enable position 1920,0
+}
+
+

@@ -1,3 +1,7 @@
+if [ -z "$WAYLAND_DISPLAY" ] && [ -n "$XDG_VTNR" ] && [ "$XDG_VTNR" -eq 1 ] ; then
+    exec sway
+fi
+
 ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
 
 if [[ ! -d "$ZINIT_HOME" ]]; then
@@ -73,23 +77,6 @@ alias git='git branchless wrap --'
 alias ls='ls --color'
 alias ll='ls -lah'
 alias k='kubectl'
-alias avante='nvim -c "ZenMode"'
-
-# git fetch and pull current branch
-function gf() {
-    local branch_name=$(git name-rev --name-only HEAD)
-    echo "fetching changes from \"${branch_name}\""
-    if [[ $? != 0 ]]; then
-        echo 'failed to get current branch name'
-        return
-    fi
-
-    git fetch origin "$branch_name" && git pull
-}
-
-alias gam='git commit --amend --no-edit'
-
-alias fd='fd --color=never'
 
 mkcd() {
   mkdir -p "$1" && cd "$1"
@@ -119,7 +106,8 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
 
-export VISUAL=nvim
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+export VISUAL=vim
 export EDITOR="$VISUAL"
 
 export GOPATH="$HOME/go"

@@ -31,7 +31,6 @@ vim.opt.undofile = true
 vim.opt.spell = true
 vim.opt.spelllang = { 'en_us' }
 
--- TODO: remove
 vim.opt.clipboard = 'unnamedplus'
 
 vim.keymap.set('n', '<Esc>', '<CMD>nohlsearch<CR>')
@@ -58,8 +57,6 @@ local plugins = {
     { src = 'git@github.com:rose-pine/neovim.git', name = 'rose-pine' },
     { src = 'git@github.com:nvim-lua/plenary.nvim.git' },
     { src = 'git@github.com:tpope/vim-sleuth.git' },
-    { src = 'git@github.com:yetone/avante.nvim.git' },
-    { src = 'git@github.com:MunifTanjim/nui.nvim.git' },
     { src = 'git@github.com:lukas-reineke/indent-blankline.nvim.git' },
 
     -- Treesitter
@@ -104,11 +101,6 @@ lib.pack_on_plugin_change('LuaSnip', function(ev)
     local makepath = ev.data.path
 
     vim.notify(vim.fn.system { 'make', '-C', makepath, 'install_jsregexp' })
-end)
-lib.pack_on_plugin_change('avante.nvim', function(ev)
-    local makepath = ev.data.path
-
-    vim.notify(vim.fn.system { 'make', '-C', makepath })
 end)
 
 lib.pack_register_plugins(plugins)
