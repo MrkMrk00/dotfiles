@@ -54,7 +54,7 @@ function M.setup()
             cpp = { 'clang-format' },
             go = { 'gofmt' },
             php = { 'php-cs-fixer' },
-            python = { 'autopep8', 'isort' },
+            python = { 'ruff' },
         },
         formatters = {
             ['clang-format'] = {

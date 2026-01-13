@@ -4,24 +4,20 @@
       "rev": "3732756842a2f7e0e76a7b0487e9692072857277",
       "src": "git@github.com:L3MON4D3/LuaSnip.git"
     },
-    "avante.nvim": {
-      "rev": "5df39b480d438a46afa1571db6480210bccea21b",
-      "src": "git@github.com:yetone/avante.nvim.git"
-    },
     "conform.nvim": {
-      "rev": "4993e07fac6679d0a5005aa7499e0bad2bd39f19",
+      "rev": "8314f4c9e205e7f30b62147069729f9a1227d8bf",
       "src": "git@github.com:stevearc/conform.nvim.git"
     },
     "fzf-lua": {
-      "rev": "9a0704e8af8f8442110ff22a83b5608366b235df",
+      "rev": "19d7020b700879759d7f834fc717dde086f673a7",
       "src": "git@github.com:ibhagwan/fzf-lua.git"
     },
     "gitsigns.nvim": {
-      "rev": "cdafc320f03f2572c40ab93a4eecb733d4016d07",
+      "rev": "6bd29494e3f79ff08be1d35bc1926ed23c22ed9a",
       "src": "git@github.com:lewis6991/gitsigns.nvim.git"
     },
     "indent-blankline.nvim": {
-      "rev": "005b560",
+      "rev": "005b56001b2cb30bfa61b7986bc50657816ba4ba",
       "src": "git@github.com:lukas-reineke/indent-blankline.nvim.git"
     },
     "lazydev.nvim": {
@@ -29,7 +25,7 @@
       "src": "git@github.com:folke/lazydev.nvim.git"
     },
     "mason-lspconfig.nvim": {
-      "rev": "7d527c76c43f46294de9c19d39c5a86317809b4b",
+      "rev": "4cfe411526a7a99c18281135e8b4765ae6330d15",
       "src": "git@github.com:mason-org/mason-lspconfig.nvim.git"
     },
     "mason.nvim": {
@@ -37,27 +33,19 @@
       "src": "git@github.com:mason-org/mason.nvim.git"
     },
     "neogit": {
-      "rev": "451e57fa3633c935c4c32c669ad5aa447d3db257",
+      "rev": "d8bf9102692250193b855acd9025a826f1af2729",
       "src": "git@github.com:NeogitOrg/neogit.git"
     },
-    "neovim": {
-      "rev": "cf2a288696b03d0934da713d66c6d71557b5c997",
-      "src": "git@github.com:rose-pine/neovim.git"
-    },
-    "nui.nvim": {
-      "rev": "de74099",
-      "src": "git@github.com:MunifTanjim/nui.nvim.git"
-    },
     "nvim-lint": {
-      "rev": "d1118791070d090777398792a73032a0ca5c79ff",
+      "rev": "1f19dacd945a7b1a57f29f32b2d7168384df3d36",
       "src": "git@github.com:mfussenegger/nvim-lint.git"
     },
     "nvim-lspconfig": {
-      "rev": "f1237a8b3c243608a7116fa1ad216c441d7c2264",
+      "rev": "ac04ec3c2af08e9821b4eb64ede86072b9b213bf",
       "src": "git@github.com:neovim/nvim-lspconfig.git"
     },
     "nvim-treesitter": {
-      "rev": "42fc28ba",
+      "rev": "42fc28ba918343ebfd5565147a42a26580579482",
       "src": "git@github.com:nvim-treesitter/nvim-treesitter.git",
       "version": "'master'"
     },
@@ -66,11 +54,11 @@
       "src": "git@github.com:nvim-treesitter/nvim-treesitter-textobjects.git"
     },
     "nvim-ts-autotag": {
-      "rev": "c4ca798",
+      "rev": "c4ca798ab95b316a768d51eaaaee48f64a4a46bc",
       "src": "git@github.com:windwp/nvim-ts-autotag.git"
     },
     "oil.nvim": {
-      "rev": "01cb3a8ad7d5e8707041edc775af83dbf33838f4",
+      "rev": "81b8a91735ad5cd24a6b3137f14a89f19176364f",
       "src": "git@github.com:stevearc/oil.nvim"
     },
     "plenary.nvim": {
@@ -82,7 +70,7 @@
       "src": "git@github.com:rose-pine/neovim.git"
     },
     "vim-sleuth": {
-      "rev": "be69bff",
+      "rev": "be69bff86754b1aa5adcbb527d7fcd1635a84080",
       "src": "git@github.com:tpope/vim-sleuth.git"
     }
   }

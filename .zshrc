@@ -1,5 +1,5 @@
-if [[ -f "~/.xinitrc" && "$XDG_SESSION_TYPE" == "tty" && "$TTY" == "/dev/tty1" ]]; then
-  startx
+if [ -z "$WAYLAND_DISPLAY" ] && [ -n "$XDG_VTNR" ] && [ "$XDG_VTNR" -eq 1 ] ; then
+    exec sway
 fi
 
 ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
@@ -45,7 +45,7 @@ function -aws-profile() {
 
 function -kube-context() {
     local dark_blue='%F{21}%'
-    local current_context=$(kubectl config current-context)
+    local current_context=$(kubectl config current-context 2>/dev/null || echo 'default')
 
     if [[ "${current_context}" == 'default' ]]; then
         return
@@ -77,23 +77,6 @@ alias git='git branchless wrap --'
 alias ls='ls --color'
 alias ll='ls -lah'
 alias k='kubectl'
-alias avante='nvim -c "ZenMode"'
-
-# git fetch and pull current branch
-function gf() {
-    local branch_name=$(git name-rev --name-only HEAD)
-    echo "fetching changes from \"${branch_name}\""
-    if [[ $? != 0 ]]; then
-        echo 'failed to get current branch name'
-        return
-    fi
-
-    git fetch origin "$branch_name" && git pull
-}
-
-alias gam='git commit --amend --no-edit'
-
-alias fd='fd --color=never'
 
 mkcd() {
   mkdir -p "$1" && cd "$1"
@@ -123,7 +106,8 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
 
-export VISUAL=nvim
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+export VISUAL=vim
 export EDITOR="$VISUAL"
 
 export GOPATH="$HOME/go"
@@ -131,21 +115,8 @@ export GOBIN="${GOPATH}/bin"
 export COREPACK_ENABLE_AUTO_PIN=0
 export COMPOSER_BIN="${HOME}/.config/composer/vendor/bin"
 export GPG_TTY=$(tty)
-[[ -f ".EXPORT_VARS" ]] && source ./.EXPORT_VARS
-
-TINYTEX_PATH="${HOME}/opt/tinytex/bin/universal-darwin"
 
 PATH="${PATH}:${HOME}/bin:${GOBIN}:${COMPOSER_BIN}:${HOME}/.ghcup/bin:${HOME}/opt/nvim/bin:/usr/local/vanta:${TINYTEX_PATH}"
 
-# pnpm
-export PNPM_HOME="/Users/marek/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-#
-
-eval "$(fnm env --use-on-cd --corepack-enabled)"
-source "$HOME/.cargo/env"
+source /usr/share/nvm/init-nvm.sh
 
