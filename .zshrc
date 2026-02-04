@@ -5,8 +5,8 @@ fi
 ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
 
 if [[ ! -d "$ZINIT_HOME" ]]; then
-	mkdir -p "$(dirname $ZINIT_HOME)"
-	git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+    mkdir -p "$(dirname $ZINIT_HOME)"
+    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
 
 source "$ZINIT_HOME/zinit.zsh"
@@ -35,15 +35,19 @@ zinit_async zsh-users/zsh-completions
 zinit_async joshskidmore/zsh-fzf-history-search
 
 function -aws-profile() {
-    local yellow='%F{214}%'
     if [[ -z "${AWS_PROFILE}" ]]; then
         return
     fi
 
+    local yellow='%F{214}%'
     echo "%{${yellow}}(${AWS_PROFILE})%f "
 }
 
 function -kube-context() {
+    if ! type kubectl 2>&1 > /dev/null; then
+        return
+    fi
+
     local dark_blue='%F{21}%'
     local current_context=$(kubectl config current-context 2>/dev/null || echo 'default')
 
@@ -73,7 +77,7 @@ autoload -Uz compinit && compinit
 
 zinit cdreplay -q
 
-alias git='git branchless wrap --'
+alias gs='git status'
 alias ls='ls --color'
 alias ll='ls -lah'
 alias k='kubectl'
@@ -103,8 +107,8 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
-eval "$(fzf --zsh)"
-eval "$(zoxide init --cmd cd zsh)"
+type fzf    2>&1 > /dev/null && eval "$(fzf --zsh)"
+type zoxide 2>&1 > /dev/null && eval "$(zoxide init --cmd cd zsh)"
 
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 export VISUAL=vim
@@ -116,7 +120,7 @@ export COREPACK_ENABLE_AUTO_PIN=0
 export COMPOSER_BIN="${HOME}/.config/composer/vendor/bin"
 export GPG_TTY=$(tty)
 
-PATH="${PATH}:${HOME}/bin:${GOBIN}:${COMPOSER_BIN}:${HOME}/.ghcup/bin:${HOME}/opt/nvim/bin:/usr/local/vanta:${TINYTEX_PATH}"
+PATH="${PATH}:${HOME}/bin:${GOBIN}:${COMPOSER_BIN}:${HOME}/.ghcup/bin:${HOME}/opt/nvim/bin"
 
-source /usr/share/nvm/init-nvm.sh
+[[ -f "/usr/share/nvm/init-nvm.sh" ]] && source /usr/share/nvm/init-nvm.sh
 

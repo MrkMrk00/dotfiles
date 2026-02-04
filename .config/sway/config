@@ -30,7 +30,7 @@ font pango:Ubuntu 12
 exec mako
 exec flameshot
 exec blueman-applet
-exec_always killall kanshi; kanshi
+exec kanshi
 exec gammastep -l50.06:14.39 -t6500K:2500K
 
 # man sway(5)

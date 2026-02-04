@@ -186,3 +186,27 @@ vim.cmd [[
     highlight InCursor guifg=white guibg=blue
 ]]
 
+
+
+local ibl_patterns = { '*.yaml', '*.yml', '*.yaml.gotmpl' }
+
+vim.api.nvim_create_autocmd('BufEnter', {
+    group = global_augroup,
+    pattern = ibl_patterns,
+    callback = function()
+        require('ibl').setup {
+            enabled = true,
+        }
+    end,
+})
+
+vim.api.nvim_create_autocmd('BufLeave', {
+    group = global_augroup,
+    pattern = ibl_patterns,
+    callback = function()
+        require('ibl').setup {
+            enabled = false,
+        }
+    end,
+})
+

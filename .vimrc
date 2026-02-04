@@ -1,6 +1,4 @@
 syntax on
-let g:mapleader = ' '
-let g:maploacalleader = ' '
 set number
 set relativenumber
 set showmode
@@ -14,11 +12,10 @@ set smartcase
 set hlsearch
 set incsearch
 set laststatus=2
-set spell
 set mouse=a
 
 set omnifunc=syntaxcomplete#Complete
 set completeopt=fuzzy,menuone,noinsert,noselect,popup
-set complete=o,.,w
 
-colorscheme desert
+set background=light
+colorscheme default
