@@ -69,6 +69,12 @@ function -kube-context() {
     echo "%{${dark_blue}}(${current_context})%f "
 }
 
+function -hostname() {
+    if [[ -n "$SSH_TTY" ]]; then
+        echo "$USER@$(hostname) "
+    fi
+}
+
 function use-profile() {
     local profile_name="$1"
 
@@ -107,7 +113,7 @@ setopt hist_find_no_dups
 setopt completealiases # autocomplete commands, even if they are aliased
 setopt promptsubst     # PS1 substitutions
 
-PS1='$(-aws-profile)$(-kube-context)%1~ %F{green}λ%f '
+PS1='$(-hostname)$(-aws-profile)$(-kube-context)%1~ %F{green}λ%f '
 
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
