@@ -2,44 +2,16 @@ local M = {}
 
 local augroup = vim.api.nvim_create_augroup('config-lsp-augroup', { clear = true })
 
-function M._setup_vuejs()
-    local vue_language_server_path = vim.fn.expand '$MASON/packages'
-        .. '/vue-language-server'
-        .. '/node_modules/@vue/language-server'
-
-    local vue_plugin = {
-        name = '@vue/typescript-plugin',
-        location = vue_language_server_path,
-        languages = { 'vue' },
-        configNamespace = 'typescript',
-    }
-
-    vim.lsp.config('vtsls', {
-        settings = {
-            vtsls = {
-                -- This should be enabled, but the plugins then have to be defined per project :/.
-                -- autoUseWorkspaceTsdk = true,
-                tsserver = {
-                    globalPlugins = {
-                        vue_plugin,
-                    },
-                },
-            },
-        },
-        filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
-    })
-end
-
 function M.setup()
     require('mason').setup {
         install_root_dir = vim.fn.stdpath 'data' .. 'mason-nvim-next',
     }
 
-    require('mason-lspconfig').setup {
-        ensure_installed = { 'lua_ls', 'vtsls', 'clangd', 'phpactor' },
+    local mason_lspconfig = require 'mason-lspconfig'
+    mason_lspconfig.setup {
+        ensure_installed = { 'lua_ls' },
     }
 
-    require('lazydev').setup {}
     local conform = require 'conform'
     conform.setup {
         formatters_by_ft = {
@@ -68,10 +40,6 @@ function M.setup()
     }
 
     local lint = require 'lint'
-    require('lint').linters_by_ft = {
-        python = { 'mypy', 'pflake8' },
-    }
-
     vim.keymap.set('n', '<leader>f', function()
         conform.format {
             async = true,
@@ -98,8 +66,6 @@ function M.setup()
 
     vim.keymap.del('n', 'grn')
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename)
-
-    M._setup_vuejs()
 end
 
 return M

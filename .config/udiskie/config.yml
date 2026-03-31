@@ -1,0 +1,14 @@
+program_options:
+  tray: true
+  notify: true
+  automount: false
+  file_manager: xdg-open
+
+device_config:
+  - options: [rw, nosuid, nodev, noexec, uid=1000, gid=1000]
+    ignore: false
+    automount: false
+
+notifications:
+  timeout: 1.5           # Notification timeout in seconds
+  device_mounted: 5      # Show mount notifications for 5 seconds

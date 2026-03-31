@@ -58,6 +58,7 @@ local plugins = {
     { src = 'git@github.com:nvim-lua/plenary.nvim.git' },
     { src = 'git@github.com:tpope/vim-sleuth.git' },
     { src = 'git@github.com:lukas-reineke/indent-blankline.nvim.git' },
+    { src = 'git@github.com:nvim-mini/mini.surround.git' },
 
     -- Treesitter
     {
@@ -71,7 +72,6 @@ local plugins = {
     { src = 'git@github.com:neovim/nvim-lspconfig.git' },
     { src = 'git@github.com:mason-org/mason.nvim.git' },
     { src = 'git@github.com:mason-org/mason-lspconfig.nvim.git' },
-    { src = 'git@github.com:folke/lazydev.nvim.git' },
 
     -- Formatter
     { src = 'git@github.com:stevearc/conform.nvim.git' },
@@ -106,6 +106,7 @@ end)
 lib.pack_register_plugins(plugins)
 lib.pack_cleanup(plugins)
 
+require('mini.surround').setup()
 require('treesitter').setup()
 require('lsp').setup()
 require('git').setup()

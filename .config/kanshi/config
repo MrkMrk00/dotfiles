@@ -1,6 +1,6 @@
 profile "Praha" {
     output eDP-1 enable position 0,0
-    output "Samsung Electric Company LS27A600N H4ZT100915" enable position 1920,0 scale 1
+    output "Samsung Electric Company LS27A600N H4ZT100915" enable position 1920,0 scale 1.25
 }
 
 profile "Vrchlabí" {

@@ -8,16 +8,18 @@ set $up k
 set $right l
 
 set $term kitty
-set $menu wmenu-run -if "Ubuntu 14"
+set $menu wmenu-run -if "IBM Plex Sans 14"
 
 output * bg ~/Pictures/screaming-sun-wallpaper.jpg fill
 
-exec_always killall swayidle; swayidle -w      \
-    timeout 290 'brightnessctl -s set 1%'      \
-        resume 'brightnessctl -r'              \
-    timeout 295 'swaylock -f -c 000000'        \
-    timeout 300 'swaymsg "output * power off"' \
-        resume 'swaymsg "output * power on"'
+exec_always killall swayidle; swayidle -w \
+    timeout 110 'brightnessctl -s set 1%' \
+        resume 'brightnessctl -r' \
+    timeout 120 'swaylock -f -c 000000' \
+    timeout 125 'swaymsg "output * power off"' \
+         resume 'swaymsg "output * power on"' \
+    timeout 300 'systemctl suspend' \
+    before-sleep 'swaylock -f -c 000000'
 
 bindsym Ctrl+Alt+L exec swaylock -f -c 000000
 
@@ -25,13 +27,14 @@ bindsym $mod+B exec flatpak run io.gitlab.librewolf-community
 
 bindsym Print exec flameshot gui
 
-font pango:Ubuntu 12
+font pango:IBM Plex Sans 13
 
 exec mako
 exec flameshot
 exec blueman-applet
 exec kanshi
 exec gammastep -l50.06:14.39 -t6500K:2500K
+exec udiskie
 
 # man sway(5)
 # ===========
@@ -54,8 +57,13 @@ bindswitch --reload lid:off exec ~/.config/sway/lid-switch.sh on
 
 default_border pixel 2
 
-client.unfocused #000000 #000000 #ffffff #2e9ef4 #ffffff
-client.focused   #4c7899 #4c7899 #ffffff #2e9ef4 #4c7899
+client.focused          #83d9f1 #2f2b37 #f6f5f5 #83d9f1   #83d9f1
+client.focused_inactive #1c1824 #1c1824 #d1d1d1 #1c1824   #1c1824
+client.unfocused        #141217 #141217 #888888 #141217   #141217
+client.urgent           #fe89a1 #fe89a1 #ffffff #fe89a1   #fe89a1
+
+titlebar_padding 8 4
+titlebar_border_thickness 2
 
 gaps outer 0
 gaps inner 4

@@ -1,47 +1,47 @@
 {
   "plugins": {
     "LuaSnip": {
-      "rev": "3732756842a2f7e0e76a7b0487e9692072857277",
+      "rev": "dae4f5aaa3574bd0c2b9dd20fb9542a02c10471c",
       "src": "git@github.com:L3MON4D3/LuaSnip.git"
     },
     "conform.nvim": {
-      "rev": "238f542a118984a88124fc915d5b981680418707",
+      "rev": "c2526f1cde528a66e086ab1668e996d162c75f4f",
       "src": "git@github.com:stevearc/conform.nvim.git"
     },
     "fzf-lua": {
-      "rev": "e7773d0c863a31bfc8ab72dd1adbec4611a35409",
+      "rev": "b2c0603216adb92c6bba81053bc996d7ae95b77a",
       "src": "git@github.com:ibhagwan/fzf-lua.git"
     },
     "gitsigns.nvim": {
-      "rev": "42d6aed4e94e0f0bbced16bbdcc42f57673bd75e",
+      "rev": "9f3c6dd7868bcc116e9c1c1929ce063b978fa519",
       "src": "git@github.com:lewis6991/gitsigns.nvim.git"
     },
     "indent-blankline.nvim": {
-      "rev": "005b56001b2cb30bfa61b7986bc50657816ba4ba",
+      "rev": "d28a3f70721c79e3c5f6693057ae929f3d9c0a03",
       "src": "git@github.com:lukas-reineke/indent-blankline.nvim.git"
     },
-    "lazydev.nvim": {
-      "rev": "5231c62aa83c2f8dc8e7ba957aa77098cda1257d",
-      "src": "git@github.com:folke/lazydev.nvim.git"
-    },
     "mason-lspconfig.nvim": {
-      "rev": "fe661093f4b05136437b531e7f959af2a2ae66c8",
+      "rev": "21c2a84ce368e99b18f52ab348c4c02c32c02fcf",
       "src": "git@github.com:mason-org/mason-lspconfig.nvim.git"
     },
     "mason.nvim": {
       "rev": "44d1e90e1f66e077268191e3ee9d2ac97cc18e65",
       "src": "git@github.com:mason-org/mason.nvim.git"
     },
+    "mini.surround": {
+      "rev": "d205d1741d1fcc1f3117b4e839bf00f74ad72fa2",
+      "src": "git@github.com:nvim-mini/mini.surround.git"
+    },
     "neogit": {
-      "rev": "d8bf9102692250193b855acd9025a826f1af2729",
+      "rev": "22433eae87236c217e0810c836fa5e529c043d4c",
       "src": "git@github.com:NeogitOrg/neogit.git"
     },
     "nvim-lint": {
-      "rev": "ca6ea12daf0a4d92dc24c5c9ae22a1f0418ade37",
+      "rev": "486474c2ace8d78d28995074dbdbe29011bc63d0",
       "src": "git@github.com:mfussenegger/nvim-lint.git"
     },
     "nvim-lspconfig": {
-      "rev": "92ee7d42320edfbb81f3cad851314ab197fa324a",
+      "rev": "44acfe887d4056f704ccc4f17513ed41c9e2b2e6",
       "src": "git@github.com:neovim/nvim-lspconfig.git"
     },
     "nvim-treesitter": {
@@ -54,11 +54,11 @@
       "src": "git@github.com:nvim-treesitter/nvim-treesitter-textobjects.git"
     },
     "nvim-ts-autotag": {
-      "rev": "c4ca798ab95b316a768d51eaaaee48f64a4a46bc",
+      "rev": "8e1c0a389f20bf7f5b0dd0e00306c1247bda2595",
       "src": "git@github.com:windwp/nvim-ts-autotag.git"
     },
     "oil.nvim": {
-      "rev": "fbbb2a98721da86f46b06994fd3b4833b04c6e9b",
+      "rev": "f55b25e493a7df76371cfadd0ded5004cb9cd48a",
       "src": "git@github.com:stevearc/oil.nvim"
     },
     "plenary.nvim": {

@@ -1,26 +1,28 @@
 * {
     border: none;
     border-radius: 0;
-    font-family: "Ubuntu";
+    font-family: "IBM Plex Sans", "Symbols Nerd Font";
     font-size: 16px;
+    font-weight: 500; /* Medium weight gives it that premium look */
     min-height: 0;
 }
 
 window#waybar {
-    background: #000;
+    background: black;
     color: white;
 }
 
 #workspaces button {
-    padding: 0 5px;
+    padding: 5px 5px;
     background: transparent;
     color: white;
-    border-top: 2px solid transparent;
+    border-radius: 8px;
 }
 
 #workspaces button.focused {
-    color: #c9545d;
-    border-top: 2px solid #c9545d;
+    color: white;
+    background: #1ab9e6;
+    border: 0;
 }
 
 #mode {
