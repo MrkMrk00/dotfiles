@@ -6,10 +6,15 @@ ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
 ZINIT_VERSION='5c0c0454deeb9eac95e08ef214b5d7ba6859db14' # v3.14.0
 
 if [[ ! -d "$ZINIT_HOME" ]]; then
-    mkdir -p "$(dirname $ZINIT_HOME)"
-    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME" \
-        --depth=1 \
-        --revision="$ZINIT_VERSION"
+    mkdir -p "$ZINIT_HOME"
+    pushd "$ZINIT_HOME"
+
+    git init
+    git remote add origin https://github.com/zdharma-continuum/zinit.git
+    git fetch --depth=1 origin "$ZINIT_VERSION"
+
+    git checkout -d FETCH_HEAD
+    popd
 fi
 
 source "$ZINIT_HOME/zinit.zsh"
