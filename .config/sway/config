@@ -7,12 +7,12 @@ set $down j
 set $up k
 set $right l
 
-set $term kitty
-set $menu wmenu-run -if "IBM Plex Sans 14"
+set $term kitty -1
+set $menu PATH="$PATH:/var/lib/flatpak/exports/bin" wmenu-run -b -i -f "IBM Plex Sans 14"
 
 output * bg ~/Pictures/screaming-sun-wallpaper.jpg fill
 
-exec_always killall swayidle; swayidle -w \
+exec swayidle -w \
     timeout 110 'brightnessctl -s set 1%' \
         resume 'brightnessctl -r' \
     timeout 120 'swaylock -f -c 000000' \
@@ -29,12 +29,18 @@ bindsym Print exec flameshot gui
 
 font pango:IBM Plex Sans 13
 
+seat * xcursor_theme Adwaita 24
+
+exec pipewire
 exec mako
 exec flameshot
 exec blueman-applet
 exec kanshi
 exec gammastep -l50.06:14.39 -t6500K:2500K
 exec udiskie
+exec kitty --single-instance --start-as=hidden
+
+exec sh -cl 'eval $(ssh-agent -a "$XDG_RUNTIME_DIR/ssh-agent.socket")'
 
 # man sway(5)
 # ===========

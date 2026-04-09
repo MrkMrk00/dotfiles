@@ -1,5 +1,10 @@
 if [ -z "$WAYLAND_DISPLAY" ] && [ -n "$XDG_VTNR" ] && [ "$XDG_VTNR" -eq 1 ] ; then
-    exec sway
+    export XDG_SESSION_TYPE=wayland
+    export XDG_CURRENT_DESKTOP=sway
+    export MOZ_ENABLE_WAYLAND=1
+
+    logger -t sway <<< "starting sway at $(date -u +'%Y-%m-%d %H:%M')"
+    exec dbus-run-session sway 2>&1 | logger -t sway
 fi
 
 ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
@@ -125,10 +130,7 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
-type fzf    2>&1 > /dev/null && eval "$(fzf --zsh)"
-type zoxide 2>&1 > /dev/null && eval "$(zoxide init --cmd cd zsh)"
-type fnm    2>&1 > /dev/null && eval "$(fnm env --use-on-cd --shell zsh)"
-
+export XDG_DATA_DIRS="/var/lib/flatpak/exports/bin:$XDG_DATA_DIRS"
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 export VISUAL=vim
 export EDITOR="$VISUAL"
@@ -139,5 +141,8 @@ export COREPACK_ENABLE_AUTO_PIN=0
 export COMPOSER_BIN="${HOME}/.config/composer/vendor/bin"
 export GPG_TTY=$(tty)
 
-PATH="${PATH}:${HOME}/bin:${GOBIN}:${COMPOSER_BIN}:${HOME}/.ghcup/bin:${HOME}/opt/nvim/bin:${HOME}/opt/lima/bin"
+PATH="${PATH}:${HOME}/.local/bin:${GOBIN}:${COMPOSER_BIN}:${HOME}/.ghcup/bin:${HOME}/opt/lima/bin:${HOME}/.cargo/bin"
 
+type fzf    2>&1 > /dev/null && eval "$(fzf --zsh)"
+type zoxide 2>&1 > /dev/null && eval "$(zoxide init --cmd cd zsh)"
+type fnm    2>&1 > /dev/null && eval "$(fnm env --use-on-cd --shell zsh)"
