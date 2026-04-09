@@ -6,7 +6,6 @@ function M.setup()
     end)
 
     local gitsigns = require 'gitsigns'
-    local ts_repeat_move = require 'nvim-treesitter.textobjects.repeatable_move'
 
     gitsigns.setup {
         on_attach = function(bufnr)
@@ -19,17 +18,8 @@ function M.setup()
             map('n', '<leader>gs', gitsigns.stage_hunk)
             map('n', '<leader>gr', gitsigns.reset_hunk)
 
-            -- make the next/prev hunk commands repeatable with ";" and ","
-            local next_hunk_repeat, prev_hunk_repeat = ts_repeat_move.make_repeatable_move_pair(function()
-                ---@diagnostic disable-next-line: param-type-mismatch
-                gitsigns.nav_hunk 'next'
-            end, function()
-                ---@diagnostic disable-next-line: param-type-mismatch
-                gitsigns.nav_hunk 'prev'
-            end)
-
-            map({ 'n', 'x', 'o' }, ']h', next_hunk_repeat)
-            map({ 'n', 'x', 'o' }, '[h', prev_hunk_repeat)
+            map({ 'n', 'x', 'o' }, ']h', function () gitsigns.nav_hunk 'next' end)
+            map({ 'n', 'x', 'o' }, '[h', function () gitsigns.nav_hunk 'prev' end)
 
             map('v', '<leader>gs', function()
                 gitsigns.stage_hunk { vim.fn.line '.', vim.fn.line 'v' }

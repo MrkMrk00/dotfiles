@@ -31,7 +31,7 @@ vim.opt.undofile = true
 vim.opt.spell = true
 vim.opt.spelllang = { 'en_us' }
 
-vim.opt.clipboard = 'unnamedplus'
+vim.g.clipboard = 'osc52'
 
 vim.keymap.set('n', '<Esc>', '<CMD>nohlsearch<CR>')
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic error messages' })
@@ -54,19 +54,16 @@ vim.filetype.add {
 }
 
 local plugins = {
-    { src = 'git@github.com:rose-pine/neovim.git', name = 'rose-pine' },
+    { src = 'git@github.com:rose-pine/neovim.git',                            name = 'rose-pine' },
     { src = 'git@github.com:nvim-lua/plenary.nvim.git' },
     { src = 'git@github.com:tpope/vim-sleuth.git' },
     { src = 'git@github.com:lukas-reineke/indent-blankline.nvim.git' },
     { src = 'git@github.com:nvim-mini/mini.surround.git' },
 
     -- Treesitter
-    {
-        src = 'git@github.com:nvim-treesitter/nvim-treesitter.git',
-        version = 'master',
-    },
+    { src = 'git@github.com:nvim-treesitter/nvim-treesitter.git',             version = 'main' },
     { src = 'git@github.com:windwp/nvim-ts-autotag.git' },
-    { src = 'git@github.com:nvim-treesitter/nvim-treesitter-textobjects.git' },
+    { src = 'git@github.com:nvim-treesitter/nvim-treesitter-textobjects.git', version = 'main' },
 
     -- LSP
     { src = 'git@github.com:neovim/nvim-lspconfig.git' },
@@ -106,11 +103,11 @@ end)
 lib.pack_register_plugins(plugins)
 lib.pack_cleanup(plugins)
 
-require('mini.surround').setup()
-require('treesitter').setup()
+
 require('lsp').setup()
 require('git').setup()
 require('fzf').setup()
+require('treesitter').setup()
 
 -- Completion ====================
 -- vim.opt.completefuzzycollect = 'keyword'
@@ -211,3 +208,4 @@ vim.api.nvim_create_autocmd('BufLeave', {
     end,
 })
 
+require('mini.surround').setup()

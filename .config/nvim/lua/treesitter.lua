@@ -1,39 +1,54 @@
 local M = {}
 
 function M.setup()
-    ---@diagnostic disable-next-line: missing-fields
-    require('nvim-treesitter.configs').setup {
-        auto_install = true,
-        ensure_installed = { 'gotmpl', 'yaml' },
-        indent = { enable = true },
-        highlight = { enable = true },
-        additional_vim_regex_highlighting = { 'tex' },
-        textobjects = {
-            select = {
-                enable = true,
-                keymaps = {
-                    ['if'] = '@function.inner',
-                    ['af'] = '@function.outer',
-                    ['ib'] = '@block.inner',
-                    ['ab'] = '@block.outer',
-                    ['as'] = '@statement.outer',
-                },
-                include_surrounding_whitespace = false,
-            },
-            move = {
-                enable = true,
-                set_jumps = true,
-                goto_next_start = {
-                    [']m'] = '@function.outer',
-                },
-                goto_previous_start = {
-                    ['[m'] = '@function.outer',
-                },
-            },
+    local augroup = vim.api.nvim_create_augroup('config.treesitter', { clear = true })
+    local ts = require 'nvim-treesitter'
+    ts.setup {
+        install_dir = vim.fn.stdpath('data') .. '/treesitter'
+    }
+    ts.install({ 'stable' })
+
+    vim.api.nvim_create_autocmd('FileType', {
+        group = augroup,
+        pattern = ts.get_installed(),
+        callback = function()
+            vim.treesitter.start()
+        end
+    })
+
+    require('nvim-treesitter-textobjects').setup {
+        select = {
+            lookahead = true,
+            include_surrounding_whitespace = false,
+        },
+        move = {
+            set_jumps = true,
         },
     }
 
-    local ts_repeat_move = require 'nvim-treesitter.textobjects.repeatable_move'
+    vim.keymap.set({ "x", "o" }, "af", function()
+        require "nvim-treesitter-textobjects.select".select_textobject("@function.outer", "textobjects")
+    end)
+    vim.keymap.set({ "x", "o" }, "if", function()
+        require "nvim-treesitter-textobjects.select".select_textobject("@function.inner", "textobjects")
+    end)
+    vim.keymap.set({ "x", "o" }, "ac", function()
+        require "nvim-treesitter-textobjects.select".select_textobject("@class.outer", "textobjects")
+    end)
+    vim.keymap.set({ "x", "o" }, "ic", function()
+        require "nvim-treesitter-textobjects.select".select_textobject("@class.inner", "textobjects")
+    end)
+    vim.keymap.set({ "x", "o" }, "as", function()
+        require "nvim-treesitter-textobjects.select".select_textobject("@local.scope", "locals")
+    end)
+    vim.keymap.set({ "n", "x", "o" }, "]m", function()
+        require("nvim-treesitter-textobjects.move").goto_next_start("@function.outer", "textobjects")
+    end)
+    vim.keymap.set({ "n", "x", "o" }, "[m", function()
+        require("nvim-treesitter-textobjects.move").goto_previous_start("@function.outer", "textobjects")
+    end)
+
+    local ts_repeat_move = require 'nvim-treesitter-textobjects.repeatable_move'
     vim.keymap.set({ 'n', 'x', 'o' }, ';', ts_repeat_move.repeat_last_move)
     vim.keymap.set({ 'n', 'x', 'o' }, ',', ts_repeat_move.repeat_last_move_opposite)
 
@@ -49,8 +64,8 @@ function M.setup()
 
     require('nvim-ts-autotag').setup {
         opts = {
-            enable_close = true, -- Auto close tags
-            enable_rename = true, -- Auto rename pairs of tags
+            enable_close = true,           -- Auto close tags
+            enable_rename = true,          -- Auto rename pairs of tags
             enable_close_on_slash = false, -- Auto close on trailing </
         },
     }
