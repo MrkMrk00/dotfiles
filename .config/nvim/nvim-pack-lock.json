@@ -37,7 +37,7 @@
       "src": "git@github.com:NeogitOrg/neogit.git"
     },
     "nvim-lint": {
-      "rev": "4b03656c09c1561f89b6aa0665c15d292ba9499d",
+      "rev": "d48f3a76189d03b2239f6df1b2f7e3fa8353743b",
       "src": "git@github.com:mfussenegger/nvim-lint.git"
     },
     "nvim-lspconfig": {

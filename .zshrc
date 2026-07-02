@@ -104,6 +104,8 @@ autoload -Uz compinit && compinit
 
 zinit cdreplay -q
 
+type git-branchless 2>&1 > /dev/null && alias git='git branchless wrap'
+
 alias gs='git status'
 alias ls='ls --color'
 alias ll='ls -lah'
@@ -139,7 +141,11 @@ export GOPATH="$HOME/go"
 export GOBIN="${GOPATH}/bin"
 export COREPACK_ENABLE_AUTO_PIN=0
 export COMPOSER_BIN="${HOME}/.config/composer/vendor/bin"
+
 export GPG_TTY=$(tty)
+if [[ -n "$SSH_TTY" ]]; then
+    export GPG_AGENT_INFO="/run/user/$(id -u)/gnupg/S.gpg-agent:0:1"
+fi
 
 PATH="${PATH}:${HOME}/.local/bin:${GOBIN}:${COMPOSER_BIN}:${HOME}/.ghcup/bin:${HOME}/opt/lima/bin:${HOME}/.cargo/bin"
 

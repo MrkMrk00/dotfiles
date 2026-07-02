@@ -13,17 +13,13 @@ Zsh plugins:
 Nvim plugins:
 - [rose-pine/neovim](https://github.com/rose-pine/neovim) - colortheme
 - [nvim-lua/plenary.nvim](https://github.com/nvim-lua/plenary.nvim) - a dependency of some plugins
-- [folke/snacks.nvim](https://github.com/folke/snacks.nvim) - snacks.image for rendering images in terminal through kitty
-- [MeanderingProgrammer/render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim) - rendering markdown
 - [nvim-treesitter/nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) - interact with treesitter in nvim lua
 - [windwp/nvim-ts-autotag](https://github.com/windwp/nvim-ts-autotag) - autocomplete closing HTML/XML tags
 - [nvim-treesitter/nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects) - motions on treesitter objects (around/inside function, jumping, ...)
 - [neovim/nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) - LSP
 - [mason-org/mason.nvim](https://github.com/mason-org/mason.nvim) - installing LSPs, linters, formatters, ...
 - [mason-org/mason-lspconfig.nvim](https://github.com/mason-org/mason-lspconfig.nvim) - LSP configurations
-- [folke/lazydev.nvim](https://github.com/folke/lazydev.nvim) - nvim lua plugin
 - [stevearc/conform.nvim](https://github.com/stevearc/conform.nvim) - autoformatting
-- [mfussenegger/nvim-lint](https://github.com/mfussenegger/nvim-lint) - automatic linting (mostly only for mypy :/)
 - [ibhagwan/fzf-lua](https://github.com/ibhagwan/fzf-lua) - vim.ui.select replacement, fuzzy search
 - [stevearc/oil.nvim](https://github.com/stevearc/oil.nvim) - file manager as a VIM buffer
 - [lewis6991/gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) - git in buffers
@@ -35,12 +31,10 @@ Programs:
 - zsh
 - zinit (zsh plugin manager :/)
 - kitty
-- yabai, skhd (MacOS tiling)
-- nvim (nightly)
+- nvim
 - zoxide
 - fzf
 - fnm
 - cargo
 - make (probably)
-- Iosevka font package
 

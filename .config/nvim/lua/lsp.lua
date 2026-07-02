@@ -4,7 +4,7 @@ local augroup = vim.api.nvim_create_augroup('config-lsp-augroup', { clear = true
 
 function M.setup()
     require('mason').setup {
-        install_root_dir = vim.fn.stdpath 'data' .. 'mason-nvim-next',
+        install_root_dir = vim.fn.stdpath('data') .. '/mason',
     }
 
     local mason_lspconfig = require 'mason-lspconfig'
@@ -16,12 +16,12 @@ function M.setup()
     conform.setup {
         formatters_by_ft = {
             lua = { 'stylua' },
-            javascript = { 'prettierd', 'eslint' },
-            typescript = { 'prettierd', 'eslint' },
-            typescriptreact = { 'prettierd', 'eslint' },
-            javascriptreact = { 'prettierd', 'eslint' },
-            vue = { 'prettierd', 'eslint' },
-            svelte = { 'prettierd', 'eslint' },
+            javascript = { 'oxfmt', 'eslint' },
+            typescript = { 'oxfmt', 'eslint' },
+            typescriptreact = { 'oxfmt', 'eslint' },
+            javascriptreact = { 'oxfmt', 'eslint' },
+            vue = { 'oxfmt', 'eslint' },
+            svelte = { 'oxfmt', 'eslint' },
             c = { 'clang-format' },
             cpp = { 'clang-format' },
             go = { 'gofmt' },

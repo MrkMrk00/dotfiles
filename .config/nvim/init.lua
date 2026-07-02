@@ -50,6 +50,8 @@ vim.filetype.add {
     pattern = {
         ['.*/.*%helmfile.*%.ya?ml'] = 'helm',
         ['.*/templates/.*%.ya?ml'] = 'helm',
+        ['.*/.*%helmfile.*%.ya?ml.gotmpl'] = 'helm',
+        ['.*/templates/.*%.ya?ml.gotmpl'] = 'helm',
     },
 }
 
@@ -103,14 +105,12 @@ end)
 lib.pack_register_plugins(plugins)
 lib.pack_cleanup(plugins)
 
-
 require('lsp').setup()
 require('git').setup()
 require('fzf').setup()
 require('treesitter').setup()
 
 -- Completion ====================
--- vim.opt.completefuzzycollect = 'keyword'
 vim.opt.completeopt = {
     'fuzzy',
     'menuone',
