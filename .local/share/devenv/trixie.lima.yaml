@@ -152,6 +152,10 @@ provision:
       if ! [[ -d "./dotfiles" ]]; then
         git clone https://github.com/MrkMrk00/dotfiles --depth=1
         rm -f ~/.zshrc ~/.bashrc
+
+        pushd dotfiles
+          stow .
+        popd
       fi
 
       if ! [[ -d /nix ]]; then
@@ -163,13 +167,41 @@ provision:
         . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
         sudo loginctl enable-linger "$(whoami)"
-        sudo nix profile install \
+        sudo NIXPKGS_ALLOW_UNFREE=1 nix profile add \
           ~/dotfiles#default \
+          --impure           \
           --profile /nix/var/nix/profiles/default
 
         nix run github:nix-community/home-manager -- switch \
           --flake ~/dotfiles#"$(whoami)"
       fi
+
+      NIX_ZSH_PATH="/nix/var/nix/profiles/default/bin/zsh"
+
+      # Add the Nix Zsh binary path to the system's valid shells registry
+      # and set as default shell.
+      if ! grep -q "$NIX_ZSH_PATH" /etc/shells; then
+        echo "$NIX_ZSH_PATH" | sudo tee -a /etc/shells
+      fi
+      sudo chsh -s "$NIX_ZSH_PATH" "$(whoami)"
+
+      cat << 'EOF' > ~/.config/systemd/user/meridian.service
+      [Unit]
+      Description=Meridian Proxy Daemon
+      After=network.target
+
+      [Service]
+      Type=simple
+      ExecStartPre=docker buildx build /home/marek/.local/share --tag=meridian-proxy -f /home/marek/.local/share/meridian.Dockerfile
+      ExecStart=docker run --rm --name=meridian-proxy -p3456:3456 -vmeridian-proxy:/mnt/claude meridian-proxy
+      Restart=on-failure
+      RestartSec=1
+
+      [Install]
+      WantedBy=default.target
+      EOF
+
+      systemctl --user enable meridian.service
 
       if [[ -f /etc/lima-devenv/provisioned ]]; then exit 0; fi
       sudo usermod -aG docker "$(whoami)"

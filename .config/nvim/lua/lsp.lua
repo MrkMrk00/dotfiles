@@ -23,8 +23,6 @@ function M.setup()
             typescript = { 'oxfmt', 'eslint' },
             typescriptreact = { 'oxfmt', 'eslint' },
             javascriptreact = { 'oxfmt', 'eslint' },
-            vue = { 'oxfmt', 'eslint' },
-            svelte = { 'oxfmt', 'eslint' },
             c = { 'clang-format' },
             cpp = { 'clang-format' },
             go = { 'gofmt' },
