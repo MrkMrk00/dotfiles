@@ -1,0 +1,36 @@
+#!/bin/bash
+
+cmd="${1:-}"
+
+function print_usage() {
+    local prev_ifs=$IFS
+    IFS=:
+        local subcommands=$(find -L $PATH -maxdepth 1 -type f -executable \
+            2>/dev/null \
+            | grep 'devenv-')
+    IFS=$prev_ifs
+
+    echo "usage: $0"
+    echo 'subcommands: '
+    for subcmd in $subcommands; do
+        printf "\t%s\n" $(basename "$subcmd") \
+            | sed 's/devenv-//' \
+            >&1
+    done
+}
+
+if [[ -z "$cmd" ]]; then
+    echo 'please provide a valid command' >&2
+
+    print_usage
+    exit 1
+fi
+
+if ! type "devenv-$cmd" > /dev/null 2>&1; then
+    echo "subcommand \"$cmd\" not found" >&2
+
+    print_usage
+    exit 1
+fi
+
+devenv-$cmd ${@:2}
