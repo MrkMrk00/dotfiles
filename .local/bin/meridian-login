@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -euo pipefail
+
+docker exec -it meridian-proxy \
+    sh -c "node \"\$(npm root -g)/@anthropic-ai/claude-agent-sdk/cli.js\" $@"
+

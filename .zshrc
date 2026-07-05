@@ -1,3 +1,7 @@
+if [ -f ~/.profile ]; then
+    source ~/.profile
+fi
+
 if [ -z "$WAYLAND_DISPLAY" ] && [ -n "$XDG_VTNR" ] && [ "$XDG_VTNR" -eq 1 ] ; then
     export XDG_SESSION_TYPE=wayland
     export XDG_CURRENT_DESKTOP=sway
