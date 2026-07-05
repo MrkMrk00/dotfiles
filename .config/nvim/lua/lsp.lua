@@ -1,4 +1,6 @@
-local M = {}
+local M = {
+    mason_path = vim.fn.stdpath('data') .. '/meson'
+}
 
 local augroup = vim.api.nvim_create_augroup('config-lsp-augroup', { clear = true })
 
@@ -11,6 +13,7 @@ function M.setup()
     mason_lspconfig.setup {
         ensure_installed = { 'lua_ls' },
     }
+    require('mason').setup { install_root_dir = M.meson_path }
 
     local conform = require 'conform'
     conform.setup {
@@ -29,17 +32,11 @@ function M.setup()
             python = { 'ruff' },
         },
         formatters = {
-            ['clang-format'] = {
-                args = {
-                    '-style={BasedOnStyle: Mozilla, ColumnLimit: 120, IndentWidth: 4, AlwaysBreakAfterReturnType: None, AlwaysBreakAfterDefinitionReturnType: None, AllowShortFunctionsOnASingleLine: Empty, BreakBeforeBraces: Linux, UseTab: Never, AllowShortIfStatementsOnASingleLine: true}',
-                },
-            },
             prettierd = { require_cwd = true },
             prettier = { require_cwd = true },
         },
     }
 
-    local lint = require 'lint'
     vim.keymap.set('n', '<leader>f', function()
         conform.format {
             async = true,
@@ -55,6 +52,7 @@ function M.setup()
         end,
     })
 
+    local lint = require 'lint'
     vim.api.nvim_create_autocmd('BufWritePost', {
         group = augroup,
         callback = function()

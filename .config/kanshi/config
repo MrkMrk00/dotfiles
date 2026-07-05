@@ -5,7 +5,7 @@ profile "Praha" {
 
 profile "Vrchlabí" {
     output eDP-1 enable position 0,0
-    output "Fujitsu Siemens Computers GmbH SL23T-1 LED YV4D130364" enable position 1920,0
+    output "Fujitsu Siemens Computers GmbH SL23T-1 LED YV4D130364" enable position 1920,0 mode 1920x1080@60.0 scale 1
 }
 
 profile "Work" {
