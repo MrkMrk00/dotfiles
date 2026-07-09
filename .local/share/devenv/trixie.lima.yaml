@@ -171,10 +171,9 @@ provision:
           ~/dotfiles#default \
           --impure           \
           --profile /nix/var/nix/profiles/default
-
-        nix run github:nix-community/home-manager -- switch \
-          --flake ~/dotfiles#"$(whoami)"
       fi
+
+      if [[ -f /etc/lima-devenv/provisioned ]]; then exit 0; fi
 
       NIX_ZSH_PATH="/nix/var/nix/profiles/default/bin/zsh"
 
@@ -185,31 +184,6 @@ provision:
       fi
       sudo chsh -s "$NIX_ZSH_PATH" "$(whoami)"
 
-      cat << 'EOF' > ~/.config/systemd/user/meridian.service
-      [Unit]
-      Description=Meridian Proxy Daemon
-      After=network.target
-
-      [Service]
-      WorkingDirectory=%h/.local/share/devenv
-      Type=simple
-      ExecStartPre=docker buildx build . --tag=meridian-proxy -f meridian.Dockerfile
-      ExecStart=docker run --rm --name=meridian-proxy -p3456:3456 -vmeridian-proxy:/mnt/claude meridian-proxy
-      Restart=on-failure
-      RestartSec=1
-
-      [Install]
-      WantedBy=default.target
-      EOF
-
-      systemctl --user enable meridian.service
-
-      cat <<'EOF' >> ~/.profile
-      export ANTHROPIC_API_KEY=x
-      export ANTHROPIC_BASE_URL=http://127.0.0.1:3456
-      EOF
-
-      if [[ -f /etc/lima-devenv/provisioned ]]; then exit 0; fi
       sudo usermod -aG docker "$(whoami)"
 
   - mode: system

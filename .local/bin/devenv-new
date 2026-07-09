@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -euo pipefail
+
+limactl create --yes --name="$1" ~/.local/share/devenv/trixie.lima.yaml
+limactl start "$1"

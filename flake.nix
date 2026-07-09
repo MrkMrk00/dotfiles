@@ -3,14 +3,9 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    meridian.url = "github:rynfar/meridian";
   };
 
-  outputs = { self, nixpkgs, home-manager, meridian, ... }:
+  outputs = { self, nixpkgs, ... }:
     let
       forAllSystems = nixpkgs.lib.genAttrs [
         "x86_64-linux"
@@ -35,9 +30,6 @@
                 ~/dotfiles#default \
                 --profile /nix/var/nix/profiles/default
 
-            echo "[nix-up] Syncing Home Manager (Meridian & OpenCode services)..."
-            nix run github:nix-community/home-manager -- switch --flake ~/dotfiles#"$(whoami)"
-
             echo "[nix-up] Environment successfully updated!"
           '';
         in
@@ -47,7 +39,6 @@
             paths = with pkgs; [
               helix
               neovim
-              opencode
               claude-code
               fzf
               ripgrep
