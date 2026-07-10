@@ -25,10 +25,9 @@
             git -C ~/dotfiles pull --ff-only
 
             echo "[nix-up] Updating global system utilities profile..."
-            sudo NIXPKGS_ALLOW_UNFREE=1 nix profile add \
+            NIXPKGS_ALLOW_UNFREE=1 nix profile upgrade \
                 --impure \
-                ~/dotfiles#default \
-                --profile /nix/var/nix/profiles/default
+                ~/dotfiles#default
 
             echo "[nix-up] Environment successfully updated!"
           '';
@@ -54,9 +53,7 @@
               helmfile
               k3d
               nix-up
-
               doppler
-              tailscale
 
               # LSPs
               stylua

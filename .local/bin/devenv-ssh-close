@@ -9,5 +9,5 @@ fi
 
 ssh_config_path=$(limactl ls --format='{{.SSHConfigFile}}' "$machine_name")
 
-kitten ssh -F "$ssh_config_path" "lima-$machine_name" rm "/run/user/$(id -u)/gnupg/S.gpg-agent"
+kitten ssh -F "$ssh_config_path" "lima-$machine_name" rm "/run/user/$(id -u)/gnupg/S.gpg-agent" || true
 kitten ssh -F "$ssh_config_path" -O exit "lima-$machine_name"

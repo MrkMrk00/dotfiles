@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 set -euo pipefail
 
@@ -42,15 +42,15 @@ forward_gpg_agent() {
         sleep 2
     fi
 
-    local guest_socket="/run/user/$(id -u)/gnupg/S.gpg-agent"
+    local guest_socket="/run/user/$(limactl shell "$machine_name" id -u)/gnupg/S.gpg-agent"
     local local_socket=$(gpgconf --list-dirs agent-extra-socket)
 
-    # clean up old socket in guest
-    limactl shell "$machine_name" sh -c "test -f $guest_socket && rm $guest_socket" || true
+    # 1. Import public GPG keys (this will accidentally spawn the VM's agent)
+    gpg --export | limactl shell "$machine_name" gpg --import
 
-    # import public GPG keys (you need to have them installed locally
-    # to be usable to sign with the private keys though the agent)
-    gpg --export | limactl shell "$machine_name" gpg --import --quiet
+    # 2. FIX: Immediately kill the VM's agent that just auto-started
+    limactl shell "$machine_name" gpgconf --kill gpg-agent || true
+    limactl shell "$machine_name" rm -f "$guest_socket" || true
 
     ssh_rest_args="$ssh_rest_args -o StreamLocalBindUnlink=yes -R $guest_socket:$local_socket"
 
@@ -74,6 +74,7 @@ if (($forward_agent == 1)); then
 fi
 
 ssh_config_path=$(limactl ls --format='{{.SSHConfigFile}}' "$machine_name")
+((debug)) && ssh_rest_args="-v $ssh_rest_args"
 
 ((debug)) && echo "ssh_rest_args=\"$ssh_rest_args\""
 ((debug)) && echo "ssh_config_path=\"$ssh_config_path\""

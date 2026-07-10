@@ -50,6 +50,15 @@ provision:
         git stow curl vim ca-certificates sudo xz-utils unzip build-essential \
         gnupg gpg-agent
 
+      # Disable the VM local gpg-agent sockets from getting created.
+      # We forward a custom one through SSH.
+      systemctl --global mask    \
+        gpg-agent.socket         \
+        gpg-agent-extra.socket   \
+        gpg-agent-browser.socket \
+        gpg-agent-ssh.socket     \
+        gpg-agent.service
+
   # Docker apt repository GPG key
   - mode: data
     path: /etc/apt/keyrings/docker.asc
@@ -167,24 +176,14 @@ provision:
         . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
         sudo loginctl enable-linger "$(whoami)"
-        sudo NIXPKGS_ALLOW_UNFREE=1 nix profile add \
+        NIXPKGS_ALLOW_UNFREE=1 nix profile add \
           ~/dotfiles#default \
-          --impure           \
-          --profile /nix/var/nix/profiles/default
+          --impure
       fi
 
-      if [[ -f /etc/lima-devenv/provisioned ]]; then exit 0; fi
-
-      NIX_ZSH_PATH="/nix/var/nix/profiles/default/bin/zsh"
-
-      # Add the Nix Zsh binary path to the system's valid shells registry
-      # and set as default shell.
-      if ! grep -q "$NIX_ZSH_PATH" /etc/shells; then
-        echo "$NIX_ZSH_PATH" | sudo tee -a /etc/shells
+      if ! [[ -f ~/.ssh/known_hosts ]]; then
+        ssh-keyscan github.com > ~/.ssh/known_hosts
       fi
-      sudo chsh -s "$NIX_ZSH_PATH" "$(whoami)"
-
-      sudo usermod -aG docker "$(whoami)"
 
   - mode: system
     script: |
