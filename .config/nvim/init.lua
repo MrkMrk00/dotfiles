@@ -56,14 +56,14 @@ vim.filetype.add {
 }
 
 local plugins = {
-    { src = 'git@github.com:rose-pine/neovim.git',                            name = 'rose-pine' },
+    { src = 'git@github.com:rose-pine/neovim.git', name = 'rose-pine' },
     { src = 'git@github.com:nvim-lua/plenary.nvim.git' },
     { src = 'git@github.com:tpope/vim-sleuth.git' },
     { src = 'git@github.com:lukas-reineke/indent-blankline.nvim.git' },
     { src = 'git@github.com:nvim-mini/mini.surround.git' },
 
     -- Treesitter
-    { src = 'git@github.com:nvim-treesitter/nvim-treesitter.git',             version = 'main' },
+    { src = 'git@github.com:nvim-treesitter/nvim-treesitter.git', version = 'main' },
     { src = 'git@github.com:windwp/nvim-ts-autotag.git' },
     { src = 'git@github.com:nvim-treesitter/nvim-treesitter-textobjects.git', version = 'main' },
 
@@ -139,6 +139,15 @@ vim.keymap.set('i', '<CR>', function()
     end
 end, { expr = true })
 
+vim.api.nvim_create_autocmd('LspAttach', {
+    group = global_augroup,
+    callback = function()
+        vim.opt.omnifunc = 'v:lua.vim.lsp.omnifunc'
+    end,
+})
+
+vim.lsp.enable({ 'ts_ls', 'oxlint' })
+
 -- END Completion ================
 
 -- Snippets ======================
@@ -183,8 +192,6 @@ vim.cmd [[
     highlight Cursor guifg=black guibg=orange
     highlight InCursor guifg=white guibg=blue
 ]]
-
-
 
 local ibl_patterns = { '*.yaml', '*.yml', '*.yaml.gotmpl' }
 

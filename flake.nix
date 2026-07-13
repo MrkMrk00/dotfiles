@@ -27,7 +27,7 @@
             echo "[nix-up] Updating global system utilities profile..."
             NIXPKGS_ALLOW_UNFREE=1 nix profile upgrade \
                 --impure \
-                ~/dotfiles#default
+                dotfiles
 
             echo "[nix-up] Environment successfully updated!"
           '';
@@ -58,6 +58,7 @@
               # LSPs
               stylua
               oxfmt
+              oxlint
               tsgolint
               typescript-language-server
               python314Packages.jedi-language-server

@@ -1,28 +1,27 @@
 local M = {
-    mason_path = vim.fn.stdpath('data') .. '/meson'
+    mason_path = vim.fn.stdpath 'data' .. '/meson',
 }
 
 local augroup = vim.api.nvim_create_augroup('config-lsp-augroup', { clear = true })
 
 function M.setup()
-    require('mason').setup {
-        install_root_dir = vim.fn.stdpath('data') .. '/mason',
-    }
-
+    require('mason').setup { install_root_dir = M.meson_path }
     local mason_lspconfig = require 'mason-lspconfig'
     mason_lspconfig.setup {
         ensure_installed = { 'lua_ls' },
     }
-    require('mason').setup { install_root_dir = M.meson_path }
 
     local conform = require 'conform'
+
+    local js_formatters = { 'oxfmt', 'prettierd', 'prettier', 'eslint' }
+
     conform.setup {
         formatters_by_ft = {
             lua = { 'stylua' },
-            javascript = { 'oxfmt', 'eslint' },
-            typescript = { 'oxfmt', 'eslint' },
-            typescriptreact = { 'oxfmt', 'eslint' },
-            javascriptreact = { 'oxfmt', 'eslint' },
+            javascript = js_formatters,
+            typescript = js_formatters,
+            typescriptreact = js_formatters,
+            javascriptreact = js_formatters,
             c = { 'clang-format' },
             cpp = { 'clang-format' },
             go = { 'gofmt' },
@@ -42,13 +41,6 @@ function M.setup()
             -- quiet = true,
         }
     end)
-
-    vim.api.nvim_create_autocmd('LspAttach', {
-        group = augroup,
-        callback = function()
-            vim.opt.omnifunc = 'v:lua.vim.lsp.omnifunc'
-        end,
-    })
 
     local lint = require 'lint'
     vim.api.nvim_create_autocmd('BufWritePost', {
