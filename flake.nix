@@ -64,6 +64,11 @@
               python314Packages.jedi-language-server
               python314Packages.mypy
               python314Packages.flake8
+
+              go
+              gopls
+              golangci-lint
+              golangci-lint-langserver
             ];
           };
         }

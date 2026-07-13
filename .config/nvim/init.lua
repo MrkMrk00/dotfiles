@@ -69,8 +69,6 @@ local plugins = {
 
     -- LSP
     { src = 'git@github.com:neovim/nvim-lspconfig.git' },
-    { src = 'git@github.com:mason-org/mason.nvim.git' },
-    { src = 'git@github.com:mason-org/mason-lspconfig.nvim.git' },
 
     -- Formatter
     { src = 'git@github.com:stevearc/conform.nvim.git' },
@@ -105,7 +103,6 @@ end)
 lib.pack_register_plugins(plugins)
 lib.pack_cleanup(plugins)
 
-require('lsp').setup()
 require('git').setup()
 require('fzf').setup()
 require('treesitter').setup()
@@ -146,7 +143,50 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end,
 })
 
-vim.lsp.enable({ 'ts_ls', 'oxlint' })
+vim.lsp.enable { 'ts_ls', 'oxlint', 'gopls', 'golangci_lint_ls' }
+
+local js_formatters = { 'oxfmt', 'prettierd', 'prettier', 'eslint' }
+
+local conform = require 'conform'
+conform.setup {
+    formatters_by_ft = {
+        lua = { 'stylua' },
+        javascript = js_formatters,
+        typescript = js_formatters,
+        typescriptreact = js_formatters,
+        javascriptreact = js_formatters,
+        c = { 'clang-format' },
+        cpp = { 'clang-format' },
+        go = { 'gofmt' },
+        php = { 'php-cs-fixer' },
+        python = { 'ruff' },
+    },
+    formatters = {
+        prettierd = { require_cwd = true },
+        prettier = { require_cwd = true },
+    },
+}
+
+vim.keymap.set('n', '<leader>f', function()
+    conform.format {
+        async = true,
+        lsp_format = 'fallback',
+        -- quiet = true,
+    }
+end)
+
+local lint = require 'lint'
+vim.api.nvim_create_autocmd('BufWritePost', {
+    group = augroup,
+    callback = function()
+        lint.try_lint(nil, {
+            ignore_errors = true,
+        })
+    end,
+})
+
+vim.keymap.del('n', 'grn')
+vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename)
 
 -- END Completion ================
 
