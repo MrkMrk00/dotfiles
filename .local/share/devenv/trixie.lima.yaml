@@ -158,6 +158,9 @@ provision:
       set -euxo pipefail
       cd
 
+      mkdir -p ~/.local/{share,state}
+      mkdir -p ~/.config/
+
       if ! [[ -d "./dotfiles" ]]; then
         git clone https://github.com/MrkMrk00/dotfiles --depth=1
         rm -f ~/.zshrc ~/.bashrc

@@ -172,6 +172,8 @@ speed. Nobody reads long paragraphs.
 
 ## Comments
 
+!IMPORTANT!
+
 Write comments for whoever reads the code in the future, not for yourself while
 iterating. Never describe changes you made or the process of getting there.
 
@@ -181,6 +183,9 @@ iterating. Never describe changes you made or the process of getting there.
   reviewer grasp it quickly. That is a good use of a comment.
 - Keep them terse and straight to the point. Aim for a maximum of two lines.
 - Structure comments as short sentences. Do not use em-dashes.
+- Don't use "AI" language - no fancy words, no "blast radius", "belt-and-suspenders" no nonsense like that.
+  Explain everything in plain English as if the reader is not a native English speaker. Don't use em dashes and
+  other non-standard (non-ASCII) markers.
 
 ## Language-specific rules
 

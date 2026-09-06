@@ -24,6 +24,9 @@
             echo "[nix-up] Updating dotfiles repo"
             git -C ~/dotfiles pull --ff-only
 
+            echo "[nix-up] Updating flake.lock..."
+            nix flake update --flake ~/dotfiles
+
             echo "[nix-up] Updating global system utilities profile..."
             NIXPKGS_ALLOW_UNFREE=1 nix profile upgrade \
                 --impure \
@@ -36,7 +39,6 @@
           default = pkgs.buildEnv {
             name = "global-devenv-tools";
             paths = with pkgs; [
-              helix
               neovim
               claude-code
               fzf
@@ -54,6 +56,10 @@
               k3d
               nix-up
               doppler
+              gh
+              jq
+              mongosh
+              terramate
 
               # LSPs
               stylua
@@ -61,9 +67,11 @@
               oxlint
               tsgolint
               typescript-language-server
+              python314
               python314Packages.jedi-language-server
               python314Packages.mypy
               python314Packages.flake8
+              python314Packages.pip
 
               go
               gopls
