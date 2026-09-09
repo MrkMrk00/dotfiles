@@ -2,14 +2,6 @@
 
 TODO: minimize this list
 
-Zsh plugins:
-- [jeffreytse/zsh-vi-mode](https://github.com/jeffreytse/zsh-vi-mode) (the built-in kinda sucks, but this one does also)
-- [Aloxaf/fzf-tab](https://github.com/Aloxaf/fzf-tab)
-- [zsh-users/zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting)
-- [zsh-users/zsh-completions](https://github.com/zsh-users/zsh-completions)
-- [zsh-users/zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions)
-- [joshskidmore/zsh-fzf-history-search](https://github.com/joshskidmore/zsh-fzf-history-search)
-
 Nvim plugins:
 - [rose-pine/neovim](https://github.com/rose-pine/neovim) - colortheme
 - [nvim-lua/plenary.nvim](https://github.com/nvim-lua/plenary.nvim) - a dependency of some plugins
@@ -28,8 +20,7 @@ Nvim plugins:
 
 Programs:
 - git
-- zsh
-- zinit (zsh plugin manager :/)
+- bash
 - kitty
 - nvim
 - zoxide
