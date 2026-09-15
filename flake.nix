@@ -45,7 +45,6 @@
               ripgrep
               zoxide
               tree-sitter
-              zsh
               fnm
               asdf-vm
               awscli2

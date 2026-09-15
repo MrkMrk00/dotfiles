@@ -111,8 +111,7 @@ if [ -n "$SSH_TTY" ]; then
     export GPG_AGENT_INFO="/run/user/$(id -u)/gnupg/S.gpg-agent:0:1"
 fi
 
-PATH="${PATH}:${HOME}/.local/bin:${GOBIN}:${COMPOSER_BIN}:${HOME}/.ghcup/bin:${HOME}/opt/lima/bin:${HOME}/.cargo/bin:/usr/sbin:/sbin"
-export PATH
+export PATH="${PATH}:${HOME}/.local/bin:${GOBIN}:${COMPOSER_BIN}:${HOME}/.ghcup/bin:${HOME}/opt/lima/bin:${HOME}/.cargo/bin:/usr/sbin:/sbin:/nix/var/nix/profiles/default/bin:$HOME/.nix-profile/bin"
 
 type fzf    > /dev/null 2>&1 && eval "$(fzf --bash)"
 type zoxide > /dev/null 2>&1 && eval "$(zoxide init --cmd cd bash)"

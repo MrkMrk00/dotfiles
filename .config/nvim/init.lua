@@ -61,6 +61,7 @@ local plugins = {
     { src = 'git@github.com:tpope/vim-sleuth.git' },
     { src = 'git@github.com:lukas-reineke/indent-blankline.nvim.git' },
     { src = 'git@github.com:nvim-mini/mini.surround.git' },
+    { src = 'git@github.com:nvim-mini/mini.jump2d.git' },
 
     -- Treesitter
     { src = 'git@github.com:nvim-treesitter/nvim-treesitter.git', version = 'main' },
@@ -433,3 +434,10 @@ vim.api.nvim_create_autocmd('BufLeave', {
 })
 
 require('mini.surround').setup()
+require('mini.jump2d').setup {
+    mappings = {
+        start_jumping = 'gj',
+    },
+    view = { dim = true },
+    silent = true,
+}

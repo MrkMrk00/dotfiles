@@ -20,6 +20,10 @@
       "rev": "d28a3f70721c79e3c5f6693057ae929f3d9c0a03",
       "src": "git@github.com:lukas-reineke/indent-blankline.nvim.git"
     },
+    "mini.jump2d": {
+      "rev": "454b12da97e76161c03b9d8a8bbb82632871c96f",
+      "src": "git@github.com:nvim-mini/mini.jump2d.git"
+    },
     "mini.surround": {
       "rev": "2715e04bea3ec9244f15b421dc5b18c0fe326210",
       "src": "git@github.com:nvim-mini/mini.surround.git"
